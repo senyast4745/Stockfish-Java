@@ -13,5 +13,7 @@ public interface ChessEngine {
 
     String getLegalMoves(String fen);
 
+    String getState(String fen);
+
     String makeMove(String fen, String pgn);
 }
