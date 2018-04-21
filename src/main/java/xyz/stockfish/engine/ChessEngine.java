@@ -1,4 +1,4 @@
-package xyz.stockfish;
+package xyz.stockfish.engine;
 
 import java.io.Closeable;
 import java.util.List;
@@ -11,6 +11,4 @@ public interface ChessEngine extends Closeable {
     String getFen();
 
     String makeMove(String fen, String pgn);
-
-    boolean isAlive();
 }

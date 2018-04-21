@@ -1,9 +1,11 @@
-package xyz.stockfish.engine;
+package xyz.stockfish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.niflheim.utils.Variant;
-import xyz.stockfish.ChessEngine;
+import xyz.stockfish.engine.ChessEngine;
+import xyz.stockfish.engine.StockfishException;
+import xyz.stockfish.engine.StockfishInitException;
 import xyz.stockfish.utils.Option;
 
 import java.io.*;
@@ -113,11 +115,6 @@ public class Stockfish implements ChessEngine {
         waitForReady();
         sendCommand("position fen " + fen + " moves " + pgn);
         return getFen();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return process.isAlive();
     }
 
     private List<String> readResponse(String expected) {

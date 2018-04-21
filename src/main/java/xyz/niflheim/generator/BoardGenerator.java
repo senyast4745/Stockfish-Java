@@ -20,7 +20,7 @@ public class BoardGenerator {
     public BoardGenerator() throws IOException {
 
         try {
-            gameBoard = ImageIO.read(new File("assets/images/gameBoard.png"));
+            gameBoard = ImageIO.read(new File("assets/images/Board.png"));
             pieceMap.put('P', ImageIO.read(new File("assets/images/wPawn.png")));
             pieceMap.put('N', ImageIO.read(new File("assets/images/wKnight.png")));
             pieceMap.put('B', ImageIO.read(new File("assets/images/wBishop.png")));
