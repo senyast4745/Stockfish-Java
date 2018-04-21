@@ -46,6 +46,11 @@ public class Stockfish implements ChessEngine {
     }
 
     @Override
+    public String getBestMove(int difficulty) {
+        return getBestMove(getFen(), difficulty);
+    }
+
+    @Override
     public String getBestMove(String fen, int difficulty) {
         waitForReady();
         setOption("Skill Level", difficulty);
@@ -71,6 +76,11 @@ public class Stockfish implements ChessEngine {
     }
 
     @Override
+    public List<String> getCheckers() {
+        return getCheckers(getFen());
+    }
+
+    @Override
     public List<String> getCheckers(String fen) {
         waitForReady();
         sendCommand("position fen " + fen);
@@ -93,6 +103,12 @@ public class Stockfish implements ChessEngine {
     }
 
     @Override
+    public void setFen(String fen) {
+        waitForReady();
+        sendCommand("position fen " + fen);
+    }
+
+    @Override
     public String getFen() {
         waitForReady();
         sendCommand("d");
@@ -108,6 +124,11 @@ public class Stockfish implements ChessEngine {
             }
         }
         return fen;
+    }
+
+    @Override
+    public String makeMove(String pgn) {
+        return makeMove(getFen(), pgn);
     }
 
     @Override
