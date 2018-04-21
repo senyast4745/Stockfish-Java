@@ -2,8 +2,10 @@ package xyz.stockfish.engine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.niflheim.utils.Variant;
 import xyz.stockfish.ChessEngine;
 import xyz.stockfish.ChessEnginePool;
+import xyz.stockfish.utils.Option;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -18,12 +20,12 @@ public class StockfishPool implements ChessEnginePool {
     private final BlockingQueue<Consumer<ChessEngine>> queue = new LinkedBlockingQueue<>();
     private final List<Thread> threads = new LinkedList<>();
 
-    public StockfishPool(int workers) throws StockfishInitException {
+    public StockfishPool(Variant variant, int workers, Option... options) throws StockfishInitException {
         for (int i = 0; i < workers; i++) {
 
             int id = i;
             threads.add(new Thread("StockfishWorker-" + id) {
-                Stockfish worker = new Stockfish();
+                Stockfish worker = new Stockfish(variant, options);
 
                 {
                     setDaemon(true);
@@ -44,7 +46,7 @@ public class StockfishPool implements ChessEnginePool {
                                 worker = null;
 
                                 try {
-                                    worker = new Stockfish();
+                                    worker = new Stockfish(variant, options);
                                 } catch (Exception e) {
                                     log.error("Worker #" + id + " couldn't initialize new Stockfish instance.", e);
                                     threads.remove(this);

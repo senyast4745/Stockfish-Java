@@ -2,7 +2,7 @@ package xyz.stockfish.engine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.niflheim.utils.Settings;
+import xyz.niflheim.utils.Variant;
 import xyz.stockfish.ChessEngine;
 import xyz.stockfish.utils.Option;
 
@@ -14,15 +14,14 @@ import java.util.stream.Collectors;
 
 public class Stockfish implements ChessEngine {
     private final Logger Log = LoggerFactory.getLogger(Stockfish.class);
-    private final String executablePath = getPath();
 
     private final BufferedReader input;
     private final BufferedWriter output;
     private final Process process;
 
-    public Stockfish(Option... options) throws StockfishInitException {
+    public Stockfish(Variant variant, Option... options) throws StockfishInitException {
         try {
-            process = Runtime.getRuntime().exec(executablePath);
+            process = Runtime.getRuntime().exec(getPath(variant));
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
@@ -155,42 +154,39 @@ public class Stockfish implements ChessEngine {
         readResponse("readyok");
     }
 
-    private String getPath() {
+    private String getPath(Variant variant) {
         StringBuilder path = new StringBuilder("assets/engines/");
 
-        if (Settings.platform.equalsIgnoreCase("windows")) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             path.append("stockfish_9_x64");
 
-            switch (Settings.variant) {
-                case "BMI2":
+            switch (variant) {
+                case BMI2:
                     path.append("_bmi2.exe");
                     break;
-                case "POPCNT":
+                case POPCNT:
                     path.append("_popcnt.exe");
                     break;
                 default:
-                case "DEFAULT":
+                case DEFAULT:
                     path.append(".exe");
                     break;
             }
-        } else if (Settings.platform.equalsIgnoreCase("linux")) {
+        } else {
             path.append("./stockfish-9");
 
-            switch (Settings.variant) {
-                case "BMI2":
+            switch (variant) {
+                case BMI2:
                     path.append("-bmi2");
                     break;
-                case "POPCNT":
+                case POPCNT:
                     path.append("-popcnt");
                     break;
                 default:
-                case "DEFAULT":
+                case DEFAULT:
                     path.append("-popcnt");
                     break;
             }
-        } else {
-            Log.warn("Error in configuration file, autodetecting platform and loading defaults.");
-            return "assets/engines/" + (System.getProperty("os.name").toLowerCase().contains("win") ? "stockfish_9_x63.exe" : "./stockfish-9-64");
         }
 
 
