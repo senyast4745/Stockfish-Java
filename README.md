@@ -6,7 +6,7 @@ This is a java wrapper for the popular chess engine Stockfish 9.
 
 Edit the sampleApplication.conf settings and rename it to application.conf, there is no other work required.
 
-### Application Settings
+## Application Settings
 
 Under Construction
 
