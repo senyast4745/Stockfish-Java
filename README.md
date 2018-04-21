@@ -4,7 +4,7 @@ This is a java wrapper for the popular chess engine Stockfish 9.
 
 ## Getting Started
 
-Edit the sampleApplication.conf settings and rename it to application.conf, there is no other work required.
+Edit the application.conf to desired settings, there is no other prepwork required to use this library.
 
 ## Application Settings
 
