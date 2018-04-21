@@ -17,7 +17,7 @@ Under Construction
 ## Built With
 
 * [Gradle](https://gradle.org/) - Dependency Management
-* [Typesafe Config](https://github.com/lightbend/config) - Used to generate RSS Feeds
+* [Typesafe Config](https://github.com/lightbend/config) - Used to import settings
 * [Stockfish 9](https://stockfishchess.org/) - Underlying chess engine
 
 ## Contributing
