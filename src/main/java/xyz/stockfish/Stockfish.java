@@ -207,7 +207,6 @@ public class Stockfish implements ChessEngine {
             }
         }
 
-
         return path.toString();
     }
 }
