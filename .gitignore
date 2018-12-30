@@ -1,5 +1,8 @@
 /.gradle/
 /.idea/
+/gradle/
 /build/
 /out/
+gradlew
+gradlew.bat
 Stockfish-Java.iml
