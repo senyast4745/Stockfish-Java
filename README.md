@@ -17,6 +17,7 @@ Information regarding Stockfish Java as well as full usage of the client is deta
 ## Contributors
 **Owners and Developers**
 * [NiflheimDev](https://github.com/NiflheimDev)
+* [Kirbyquerby](https://github.com/Kirbyquerby)
 
 **Other Contributors**
 * This could be you :)
@@ -24,4 +25,3 @@ Information regarding Stockfish Java as well as full usage of the client is deta
 ## Dependencies
 * [Stockfish 10](https://stockfishchess.org/)
 * [Logback Classic](https://logback.qos.ch/)
-* [Typesafe Config](https://github.com/lightbend/config)
