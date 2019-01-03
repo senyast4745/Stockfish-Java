@@ -41,6 +41,10 @@ public class StockfishClient {
             engines.add(new Stockfish(path, variant, options.toArray(new Option[options.size()])));
     }
 
+    public void submit(Query query) {
+        submit(query, null);
+    }
+
     public void submit(Query query, Consumer<String> result) {
         executor.submit(() -> {
             Stockfish engine = engines.remove();
