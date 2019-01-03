@@ -51,4 +51,3 @@ Information regarding Stockfish Java as well as full usage of the client is deta
 
 ## Dependencies
 * [Stockfish 10](https://stockfishchess.org/)
-* [Logback Classic](https://logback.qos.ch/)
