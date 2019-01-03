@@ -14,41 +14,39 @@
  */
 package xyz.niflheim.stockfish.engine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import xyz.niflheim.stockfish.engine.enums.Option;
+import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishEngineException;
-import xyz.niflheim.stockfish.utils.Option;
-import xyz.niflheim.stockfish.utils.Variant;
+import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class UCIEngine {
-    public final Logger LOG = LoggerFactory.getLogger(UCIEngine.class);
-    public final BufferedReader input;
-    public final BufferedWriter output;
-    public final Process process;
+abstract class UCIEngine {
+    final BufferedReader input;
+    final BufferedWriter output;
+    final Process process;
 
-    public UCIEngine(Variant variant, Option... options) {
+    UCIEngine(String path, Variant variant, Option... options) throws StockfishInitException {
         try {
-            process = Runtime.getRuntime().exec(getPath(variant));
+            process = Runtime.getRuntime().exec(getPath(variant, path));
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
             for (Option option : options)
                 passOption(option);
-        } catch (Exception e) {
-            throw new StockfishEngineException(e);
+        } catch (IOException e) {
+            throw new StockfishInitException("Unable to start and bind Stockfish process: ", e);
         }
     }
 
-    public void waitForReady() {
+    void waitForReady() {
         sendCommand("isready");
         readResponse("readyok");
     }
 
-    public void sendCommand(String command) {
+    void sendCommand(String command) {
         try {
             output.write(command + "\n");
             output.flush();
@@ -57,28 +55,45 @@ public abstract class UCIEngine {
         }
     }
 
-    public List<String> readResponse(String expected) {
+    String readLine(String expected) {
+        try {
+            String line;
+
+            while ((line = input.readLine()) != null) {
+                if (line.startsWith(expected))
+                    return line;
+            }
+
+            return null;
+        } catch (IOException e) {
+            throw new StockfishEngineException(e);
+        }
+    }
+
+    List<String> readResponse(String expected) {
         try {
             List<String> lines = new ArrayList<>();
-            while (true) {
-                String line = input.readLine();
+            String line;
+
+            while ((line = input.readLine()) != null) {
                 lines.add(line);
 
                 if (line.startsWith(expected))
                     break;
             }
+
             return lines;
         } catch (IOException e) {
             throw new StockfishEngineException(e);
         }
     }
 
-    public void passOption(Option option) {
+    private void passOption(Option option) {
         sendCommand(option.toString());
     }
 
-    private String getPath(Variant variant) {
-        StringBuilder path = new StringBuilder("assets/engines/stockfish_10_x64");
+    private String getPath(Variant variant, String override) {
+        StringBuilder path = new StringBuilder(override == null ? "assets/engines/stockfish_10_x64" : override + "stockfish_10_x64");
 
         if (System.getProperty("os.name").toLowerCase().contains("win"))
             switch (variant) {

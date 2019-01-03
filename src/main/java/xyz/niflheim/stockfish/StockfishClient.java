@@ -14,47 +14,66 @@
  */
 package xyz.niflheim.stockfish;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import xyz.niflheim.stockfish.engine.Stockfish;
+import xyz.niflheim.stockfish.engine.enums.Option;
+import xyz.niflheim.stockfish.engine.enums.Query;
+import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishInitException;
-import xyz.niflheim.stockfish.pool.Move;
-import xyz.niflheim.stockfish.pool.StockfishPool;
-import xyz.niflheim.stockfish.utils.MoveType;
-import xyz.niflheim.stockfish.utils.Option;
-import xyz.niflheim.stockfish.utils.Variant;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class StockfishClient {
-    private Logger LOG = LoggerFactory.getLogger(StockfishClient.class);
-    private StockfishPool pool;
+    private ExecutorService executor, callback;
+    private Queue<Stockfish> engines;
 
-    public StockfishClient(int instances, Variant variant, Set<Option> options) {
-        pool = new StockfishPool(instances, variant, Arrays.copyOf(options.toArray(), options.size(), Option[].class));
+    public StockfishClient(String path, int instances, Variant variant, Set<Option> options) throws StockfishInitException {
+        executor = Executors.newFixedThreadPool(instances);
+        callback = Executors.newSingleThreadExecutor();
+        engines = new ArrayBlockingQueue<Stockfish>(instances);
+
+        for (int i = 0; i < instances; i++)
+            engines.add(new Stockfish(path, variant, options.toArray(new Option[options.size()])));
     }
 
-    public String makeMove(String fen, String pgn) {
-        return pool.execute(new Move(MoveType.makeMove).setFen(fen).setPgn(pgn));
-    }
+    public void submit(Query query, Consumer<String> result) {
+        executor.submit(() -> {
+            Stockfish engine = engines.remove();
+            String output;
 
-    public String getCheckers(String fen) {
-        return pool.execute(new Move(MoveType.getCheckers).setFen(fen));
-    }
+            switch (query.getType()) {
+                case Best_Move:
+                    output = engine.getBestMove(query);
+                    break;
+                case Make_Move:
+                    output = engine.makeMove(query);
+                    break;
+                case Legal_Moves:
+                    output = engine.getLegalMoves(query);
+                    break;
+                case Checkers:
+                    output = engine.getCheckers(query);
+                    break;
+                default:
+                    output = null;
+                    break;
+            }
 
-    public String getBestMove(String fen, int difficulty, int depth, int movetime) {
-        return pool.execute(new Move(MoveType.bestMove).setFen(fen).setDifficulty(difficulty).setDepth(depth).setMovetime(movetime));
-    }
-
-    public String getLegalMoves(String fen) {
-        return pool.execute(new Move(MoveType.legalMoves).setFen(fen));
+            callback.submit(() -> result.accept(output));
+            engines.add(engine);
+        });
     }
 
     public static class Builder {
         private Set<Option> options = new HashSet<>();
+        private Variant variant = Variant.DEFAULT;
+        private String path = null;
         private int instances = 1;
-        private Variant variant;
 
         public final Builder setInstances(int num) {
             instances = num;
@@ -66,16 +85,18 @@ public class StockfishClient {
             return this;
         }
 
-        public final Builder setOption(Option o, int value) {
+        public final Builder setOption(Option o, long value) {
             options.add(o.setValue(value));
             return this;
         }
 
+        public final Builder setPath(String path) {
+            this.path = path;
+            return this;
+        }
+
         public final StockfishClient build() throws StockfishInitException {
-            if (variant == null)
-                throw new StockfishInitException("Variant cannot be null!");
-            else
-                return new StockfishClient(instances, variant, options);
+            return new StockfishClient(path, instances, variant, options);
         }
     }
 }

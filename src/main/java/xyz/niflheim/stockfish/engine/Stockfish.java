@@ -14,111 +14,61 @@
  */
 package xyz.niflheim.stockfish.engine;
 
-import xyz.niflheim.stockfish.utils.Option;
-import xyz.niflheim.stockfish.utils.Variant;
+import xyz.niflheim.stockfish.engine.enums.Option;
+import xyz.niflheim.stockfish.engine.enums.Query;
+import xyz.niflheim.stockfish.engine.enums.Variant;
+import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
 import java.io.IOException;
 import java.util.List;
 
 public class Stockfish extends UCIEngine {
-    public Stockfish(Variant variant, Option... options) {
-        super(variant, options);
+    public Stockfish(String path, Variant variant, Option... options) throws StockfishInitException {
+        super(path, variant, options);
     }
 
-    public String setFen(String fen) {
+    public String makeMove(Query query) {
         waitForReady();
-        sendCommand("position fen " + fen);
-        return fen;
-    }
-
-    public String getFen() {
-        waitForReady();
-        sendCommand("d");
-
-        String fen = "";
-        List<String> response = readResponse("Checkers:");
-
-        for (int i = response.size() - 1; i >= 0; i--) {
-            String line = response.get(i);
-            if (line.startsWith("Fen: ")) {
-                fen = line.substring("Fen: ".length());
-                break;
-            }
-        }
-        return fen;
-    }
-
-    public String makeMove(String pgn) {
-        return makeMove(getFen(), pgn);
-    }
-
-    public String makeMove(String fen, String pgn) {
-        waitForReady();
-        sendCommand("position fen " + fen + " moves " + pgn);
+        sendCommand("position fen " + query.getFen() + " moves " + query.getMove());
         return getFen();
     }
 
-    public String getCheckers() {
-        return getCheckers(getFen());
-    }
-
-    public String getCheckers(String fen) {
+    public String getCheckers(Query query) {
         waitForReady();
-        sendCommand("position fen " + fen);
+        sendCommand("position fen " + query.getFen());
 
         waitForReady();
         sendCommand("d");
 
-        StringBuilder checkers = new StringBuilder();
-        List<String> response = readResponse("Checkers:");
+        return readLine("Checkers: ").substring(10);
+    }
 
-        for (int i = response.size() - 1; i >= 0; i--) {
-            String line = response.get(i);
-            if (line.startsWith("Checkers: ")) {
-                for (String pos : line.substring("Checkers: ".length()).split("\\s+"))
-                    checkers.append(pos).append(" ");
-                break;
-            }
+    public String getBestMove(Query query) {
+        if (query.getDifficulty() >= 0) {
+            waitForReady();
+            sendCommand("setoption name Skill Level value " + query.getDifficulty());
         }
 
-        return checkers.toString();
-    }
-
-    public String getBestMove(int difficulty, int depth, int movetime) {
-        return getBestMove(getFen(), difficulty, depth, movetime);
-    }
-
-    public String getBestMove(String fen, int difficulty, int depth, int movetime) {
         waitForReady();
-        sendCommand("setoption name Skill Level value " + difficulty);
+        sendCommand("position fen " + query.getFen());
 
-        waitForReady();
-        sendCommand("position fen " + fen);
+        StringBuilder command = new StringBuilder("go ");
+
+        if (query.getDepth() >= 0)
+            command.append("depth ").append(query.getDepth()).append(" ");
+
+        if (query.getMovetime() >= 0)
+            command.append("movetime ").append(query.getMovetime());
 
         waitForReady();
-        sendCommand("go depth " + depth + " movetime " + movetime);
+        sendCommand(command.toString());
 
-        String bestmove = "";
-        List<String> response = readResponse("bestmove");
-
-        for (int i = response.size() - 1; i >= 0; i--) {
-            String line = response.get(i);
-            if (line.startsWith("bestmove")) {
-                bestmove = line.substring("bestmove ".length());
-                break;
-            }
-        }
-
-        return bestmove.split("\\s+")[0];
+        return readLine("bestmove").substring(9).split("\\s+")[0];
     }
 
-    public String getLegalMoves() {
-        return getLegalMoves(getFen());
-    }
-
-    public String getLegalMoves(String fen) {
+    public String getLegalMoves(Query query) {
         waitForReady();
-        sendCommand("position fen " + fen);
+        sendCommand("position fen " + query.getFen());
 
         waitForReady();
         sendCommand("go perft 1");
@@ -127,7 +77,7 @@ public class Stockfish extends UCIEngine {
         List<String> response = readResponse("Nodes");
 
         for (String line : response)
-            if (!line.isEmpty() && line.contains(":"))
+            if (!line.isEmpty() && !line.contains("Nodes") && line.contains(":"))
                 legal.append(line.split(":")[0]).append(" ");
 
         return legal.toString();
@@ -141,5 +91,12 @@ public class Stockfish extends UCIEngine {
             input.close();
             output.close();
         }
+    }
+
+    private String getFen() {
+        waitForReady();
+        sendCommand("d");
+
+        return readLine("Fen: ").substring(5);
     }
 }
