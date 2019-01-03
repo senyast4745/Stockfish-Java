@@ -12,8 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.niflheim.stockfish.utils;
+package xyz.niflheim.stockfish.engine.enums;
 
-public enum State {
-    AWAITING, WORKING, DONE
+public enum QueryType {
+    Best_Move,
+    Make_Move,
+    Legal_Moves,
+    Checkers
 }

@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.niflheim.stockfish.utils;
+package xyz.niflheim.stockfish.engine.enums;
 
 public enum Option {
     Contempt("Contempt"),
@@ -29,13 +29,13 @@ public enum Option {
     Nodestime("nodestime");
 
     private String optionString;
-    private int value;
+    private long value;
 
     Option(String option) {
         optionString = option;
     }
 
-    public Option setValue(int value) {
+    public Option setValue(long value) {
         this.value = value;
         return this;
     }
