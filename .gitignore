@@ -5,4 +5,5 @@
 /out/
 gradlew
 gradlew.bat
+gradle.properties
 Stockfish-Java.iml

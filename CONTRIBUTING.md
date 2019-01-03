@@ -1,6 +1,8 @@
 # Contributing
 
-This project is open source and free to contribute to as there are probably tons of room for improvement.
+This open source library was mainly written for me to improve my coding abilities as well as learn more about chess
+engines. As such, there is tons of missing features and improvements to be made and I gladly accept any help on this
+repository.
 
 ## Setting up your Environment
 
@@ -25,22 +27,7 @@ Follow these instructions to set up your environment.
     Switched to new branch 'upstream/development'
     ```
 
-## Making Changes
-
-Depending on your changes there are certain rules you have to follow if you expect your Pull Request to be merged.
-
-    1. Adding a new Method or Class
-
-        If the addition is not internal(e.g. an impl class or private method) please write documentation.
-
-    2. Making a commit
-
-        When you commit your changes, make sure you write a proper commit caption explaining your work.
-
-    3. Updating your fork
-
-        Before you start committing, make sure your fork is up to date.
-
 ## Creating a Pull Request
 
-Once you have made your changes, commit and push them. Then click *Create a Pull Request* and away for a review!
+Once you have made your changes, commit and push them. Then click *Create a Pull Request* and wait for it to be added
+to the repo!

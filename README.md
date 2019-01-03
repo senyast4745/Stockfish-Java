@@ -3,7 +3,7 @@
 [![license]](https://github.com/NiflheimDev/Stockfish-Java/tree/master/LICENSE)
 [![FAQ]](https://github.com/NiflheimDev/Stockfish-Java/wiki)
 
-<img align="right" src="https://i.imgur.com/D3DIZQH.png" height="250" width="250">
+<img align="right" src="https://i.imgur.com/BpbjurX.png" height="300" width="300">
 
 # Stockfish Java
 **Stockfish Java** is an open source asynchronous high level wrapper for the popular uci chess engine [Stockfish 10](https://stockfishchess.org/)

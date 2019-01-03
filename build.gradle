@@ -1,14 +1,15 @@
 /* Stockfish Java's build.gradle */
 
 plugins {
+    id "com.jfrog.bintray" version "1.8.4"
     id 'application'
     id 'idea'
     id 'java'
 }
 
 group 'Niflheim'
-version = new Version(major: 2, minor: 0, revision: 0, build: 0)
-mainClassName = 'xyz.niflheim.ClientTester'
+version = new Version(major: 2, minor: 0, revision: 2, build: 2)
+mainClassName = 'xyz.niflheim.stockfish.StockfishTester'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -20,8 +21,21 @@ repositories {
     jcenter()
 }
 
-dependencies {
-
+bintray {
+    user = BINTRAY_USER
+    key = BINTRAY_API_KEY
+    pkg {
+        repo = 'generic'
+        name = 'Stockfish-Java'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/NiflheimDev/Stockfish-Java.git'
+        version {
+            name = '2.0-Final'
+            desc = 'Stockfish Java v2.0'
+            released = new Date()
+            vcsTag = '2.0'
+        }
+    }
 }
 
 class Version {
