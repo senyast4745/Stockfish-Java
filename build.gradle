@@ -1,7 +1,6 @@
 /* Stockfish Java's build.gradle */
 
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
     id 'application'
     id 'idea'
     id 'java'
@@ -19,23 +18,6 @@ def stockfish_version = "10"
 
 repositories {
     jcenter()
-}
-
-bintray {
-    user = BINTRAY_USER
-    key = BINTRAY_API_KEY
-    pkg {
-        repo = 'generic'
-        name = 'Stockfish-Java'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/NiflheimDev/Stockfish-Java.git'
-        version {
-            name = '2.0-Final'
-            desc = 'Stockfish Java v2.0'
-            released = new Date()
-            vcsTag = '2.0'
-        }
-    }
 }
 
 class Version {
