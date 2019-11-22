@@ -18,8 +18,11 @@ def stockfish_version = "10"
 
 repositories {
     jcenter()
+    mavenCentral()
 }
-
+repositories{
+    mavenCentral()
+}
 class Version {
     String major, minor, revision, build
 
@@ -30,4 +33,25 @@ class Version {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    compile 'log4j:log4j:1.2.17'
+    compile 'commons-logging:commons-logging:1.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+}
+
+jar {
+ /*   from ('assets'){
+
+    }*/
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest {
+        attributes 'Main-Class': 'xyz.niflheim.stockfish.StockfishTester'
+    }
 }

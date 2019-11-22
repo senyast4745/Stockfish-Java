@@ -14,12 +14,15 @@
  */
 package xyz.niflheim.stockfish;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import xyz.niflheim.stockfish.engine.Stockfish;
 import xyz.niflheim.stockfish.engine.enums.Option;
 import xyz.niflheim.stockfish.engine.enums.Query;
 import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
@@ -29,13 +32,16 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 public class StockfishClient {
+
+    private final Log logger = LogFactory.getLog(StockfishClient.class);
+
     private ExecutorService executor, callback;
     private Queue<Stockfish> engines;
 
     public StockfishClient(String path, int instances, Variant variant, Set<Option> options) throws StockfishInitException {
         executor = Executors.newFixedThreadPool(instances);
         callback = Executors.newSingleThreadExecutor();
-        engines = new ArrayBlockingQueue<Stockfish>(instances);
+        engines = new ArrayBlockingQueue<>(instances);
 
         for (int i = 0; i < instances; i++)
             engines.add(new Stockfish(path, variant, options.toArray(new Option[options.size()])));
@@ -71,6 +77,18 @@ public class StockfishClient {
             callback.submit(() -> result.accept(output));
             engines.add(engine);
         });
+    }
+
+    public void close(){
+        engines.forEach(engine -> {
+            try {
+                engine.close();
+            } catch (IOException e) {
+                logger.fatal("Can not stop Stockfish. Please, close it manually.", e);
+            }
+        });
+        executor.shutdown();
+        callback.shutdown();
     }
 
     public static class Builder {
