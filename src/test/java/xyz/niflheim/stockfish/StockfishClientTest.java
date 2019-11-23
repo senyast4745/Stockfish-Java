@@ -33,7 +33,7 @@ class StockfishClientTest {
                 int instanceNumber = 4;
                 StockfishClient client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("../../assets/engines/")
+                        .setPath("/home/work/Stockfish-Java/Stockfish-Java/assets/engines/")
                         .setOption(Option.Threads, 4) // Number of threads that Stockfish will use
                         .setVariant(Variant.BMI2)
                         .build();
@@ -49,7 +49,7 @@ class StockfishClientTest {
                 instanceNumber = 2;
                 client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("../../assets/engines/")
+                        .setPath("/home/work/Stockfish-Java/Stockfish-Java/assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
@@ -59,7 +59,7 @@ class StockfishClientTest {
 
                 client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("../../assets/engines/")
+                        .setPath("/home/work/Stockfish-Java/Stockfish-Java/assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
@@ -83,7 +83,7 @@ class StockfishClientTest {
                 int instanceNumber = 4;
                 StockfishClient client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("../../assets/engines/")
+                        .setPath("/home/work/Stockfish-Java/Stockfish-Java/assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
