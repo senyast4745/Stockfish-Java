@@ -20,6 +20,7 @@ import xyz.niflheim.stockfish.engine.Stockfish;
 import xyz.niflheim.stockfish.engine.enums.Option;
 import xyz.niflheim.stockfish.engine.enums.Query;
 import xyz.niflheim.stockfish.engine.enums.Variant;
+import xyz.niflheim.stockfish.exceptions.StockfishEngineException;
 import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class StockfishClient {
@@ -38,13 +41,13 @@ public class StockfishClient {
     private ExecutorService executor, callback;
     private Queue<Stockfish> engines;
 
-    public StockfishClient(String path, int instances, Variant variant, Set<Option> options) throws StockfishInitException {
+    private StockfishClient(String path, int instances, Variant variant, Set<Option> options) throws StockfishInitException {
         executor = Executors.newFixedThreadPool(instances);
         callback = Executors.newSingleThreadExecutor();
         engines = new ArrayBlockingQueue<>(instances);
 
         for (int i = 0; i < instances; i++)
-            engines.add(new Stockfish(path, variant, options.toArray(new Option[options.size()])));
+            engines.add(new Stockfish(path, variant, options.toArray(new Option[0])));
     }
 
     public void submit(Query query) {
@@ -79,16 +82,23 @@ public class StockfishClient {
         });
     }
 
-    public void close(){
-        engines.forEach(engine -> {
+    public void close() {
+        AtomicBoolean error = new AtomicBoolean(false);
+        AtomicReference<Exception> ex = new AtomicReference<>();
+        engines.parallelStream().forEach(engine -> {
             try {
                 engine.close();
-            } catch (IOException e) {
+            } catch (IOException | StockfishEngineException e) {
+                ex.set(e);
+                error.compareAndSet(false, true);
                 logger.fatal("Can not stop Stockfish. Please, close it manually.", e);
             }
         });
         executor.shutdown();
         callback.shutdown();
+        if (error.get()) {
+            throw new StockfishEngineException("Error while closing Stockfish threads", ex.get());
+        }
     }
 
     public static class Builder {

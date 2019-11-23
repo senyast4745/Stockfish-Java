@@ -22,26 +22,22 @@ import org.apache.commons.logging.LogFactory;
 import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class StockfishTester {
 
     final static Log logger = LogFactory.getLog(StockfishTester.class);
 
     public static void main(String[] args) throws StockfishInitException {
-        logger.info("Start");
+        int instanceNumber = 4;
         StockfishClient client = new StockfishClient.Builder()
-                .setInstances(4).setPath("/home/arseny/WorkingFolder/IdeaProjects/Stockfish-Java/assets/engines/")
+                .setInstances(instanceNumber)
+                .setPath("/home/arseny/WorkingFolder/IdeaProjects/Stockfish-Java/assets/engines/")
                 .setOption(Option.Threads, 4) // Number of threads that Stockfish will use
-                .setOption(Option.Minimum_Thinking_Time, 1000) // Minimum thinking time Stockfish will take
-                .setOption(Option.Skill_Level, 10) // Stockfish skill level 0-20
-                .setVariant(Variant.BMI2) // Stockfish Variant
+                .setVariant(Variant.BMI2)
                 .build();
-        client.submit(new Query.Builder(QueryType.Best_Move)
-                        .setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-                        // .setDifficulty(20) Setting this overrides Skill Level option
-                        // .setDepth(62) Setting this makes Stockfish search deeper
-                        // .setMovetime(1000) Setting this overrides the minimum thinking time
-                        .build(),
-                logger::info); // This is handling the result of the query
         client.close();
     }
 }
