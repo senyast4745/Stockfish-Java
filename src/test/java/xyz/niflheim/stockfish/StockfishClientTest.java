@@ -12,6 +12,7 @@ import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 import xyz.niflheim.stockfish.util.OSValidator;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -25,12 +26,15 @@ class StockfishClientTest {
 
     @Test
     void simpleTests() {
+        File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
+
+        logger.info("jarDir " + jarDir.getAbsolutePath());
         if (OSValidator.isUnix()) {
             try {
                 int instanceNumber = 4;
                 StockfishClient client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("./assets/engines/")
+                        .setPath("../../assets/engines/")
                         .setOption(Option.Threads, 4) // Number of threads that Stockfish will use
                         .setVariant(Variant.BMI2)
                         .build();
@@ -46,7 +50,7 @@ class StockfishClientTest {
                 instanceNumber = 2;
                 client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("./assets/engines/")
+                        .setPath("../../assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
@@ -56,7 +60,7 @@ class StockfishClientTest {
 
                 client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("./assets/engines/")
+                        .setPath("../../assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
@@ -74,12 +78,13 @@ class StockfishClientTest {
 
     @Test
     void killOneStockfishTest() {
+
         if (OSValidator.isUnix()) {
             try {
                 int instanceNumber = 4;
                 StockfishClient client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
-                        .setPath("./assets/engines/")
+                        .setPath("../../assets/engines/")
                         .setOption(Option.Threads, 2) // Number of threads that Stockfish will use
                         .setVariant(Variant.DEFAULT)
                         .build();
