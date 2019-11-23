@@ -28,6 +28,14 @@ class StockfishClientTest {
     void simpleTests() {
         File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
         logger.info("jarDir " + jarDir.getAbsolutePath());
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec("ls -Rla ~/work/Stockfish-Java/");
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            input.lines().forEach(logger::info);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (OSValidator.isUnix()) {
             try {
                 int instanceNumber = 4;
