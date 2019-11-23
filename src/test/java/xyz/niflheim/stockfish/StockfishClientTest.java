@@ -27,7 +27,6 @@ class StockfishClientTest {
     @Test
     void simpleTests() {
         File jarDir = new File(ClassLoader.getSystemClassLoader().getResource(".").getPath());
-
         logger.info("jarDir " + jarDir.getAbsolutePath());
         if (OSValidator.isUnix()) {
             try {
