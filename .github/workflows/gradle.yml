@@ -24,3 +24,5 @@ jobs:
         java-version: 11
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Show logs
+      run: cat /home/work/Stockfish-Java/Stockfish-Java/logFile.log
