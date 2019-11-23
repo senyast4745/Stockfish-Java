@@ -4,11 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 import xyz.niflheim.stockfish.engine.enums.Option;
-import xyz.niflheim.stockfish.engine.enums.Query;
-import xyz.niflheim.stockfish.engine.enums.QueryType;
 import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishEngineException;
-import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 import xyz.niflheim.stockfish.util.OSValidator;
 
 import java.io.BufferedReader;
@@ -30,7 +27,7 @@ class StockfishClientTest {
         logger.info("jarDir " + jarDir.getAbsolutePath());
         Process p;
         try {
-            p = Runtime.getRuntime().exec("ls -Rla ~/work/Stockfish-Java/");
+            p = Runtime.getRuntime().exec("ls -Rla ~");
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             input.lines().forEach(logger::info);
         } catch (IOException e) {
