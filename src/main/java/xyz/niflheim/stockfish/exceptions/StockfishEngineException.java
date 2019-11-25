@@ -14,19 +14,47 @@
  */
 package xyz.niflheim.stockfish.exceptions;
 
+/**
+ * Thrown when {@link java.io.IOException} occurred during Stockfish initialization.
+ *
+ * @author Niflheim
+ * @see xyz.niflheim.stockfish.engine.Stockfish
+ * @since 1.0
+ */
 public class StockfishEngineException extends RuntimeException {
+    /**
+     * Constructs a {@code StockfishEngineException} with no detail message.
+     */
     public StockfishEngineException() {
         super();
     }
 
+    /**
+     * Constructs a {@code StockfishEngineException} with the specified
+     * detail message.
+     *
+     * @param message the detail message.
+     */
     public StockfishEngineException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a {@code StockfishEngineException} with the specified
+     * detail message and the exception that caused.
+     *
+     * @param message the detail message.
+     * @param cause   the exception that caused.
+     */
     public StockfishEngineException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructs a {@code StockfishEngineException} with the exception that caused.
+     *
+     * @param cause the exception that caused.
+     */
     public StockfishEngineException(Throwable cause) {
         super(cause);
     }

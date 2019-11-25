@@ -34,6 +34,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
+/**
+ * The StockfishClient for managing Stockfish processes, as well as for interacting with the Stockfish API using Query.
+ * <p>
+ *
+ * @author Niflheim
+ * @see <a href="https://stockfishchess.org/">Stockfish website</a>
+ * @see <a href="https://github.com/official-stockfish/Stockfish">Official Stochfish <b>Github</b> repository</a>
+ * @since 1.0
+ */
 public class StockfishClient {
 
     private final Log logger = LogFactory.getLog(StockfishClient.class);
@@ -41,6 +50,16 @@ public class StockfishClient {
     private ExecutorService executor, callback;
     private Queue<Stockfish> engines;
 
+
+    /**
+     * Private constructor for {@code StockfishClient} which is used by Builder to create a new instance
+     *
+     * @param path      path to folder with Stockfish core (default assets/engine)
+     * @param instances number of Stockfish core that will be launched to process requests asynchronously
+     * @param variant   variant of Stockfish core, see {@link xyz.niflheim.stockfish.engine.enums.Variant} enum
+     * @param options   Stockfish launch options, see {@link xyz.niflheim.stockfish.engine.enums.Option} enum
+     * @throws StockfishInitException throws if Stockfish process can not be initialized, starter or bind
+     */
     private StockfishClient(String path, int instances, Variant variant, Set<Option> options) throws StockfishInitException {
         executor = Executors.newFixedThreadPool(instances);
         callback = Executors.newSingleThreadExecutor();
@@ -50,10 +69,29 @@ public class StockfishClient {
             engines.add(new Stockfish(path, variant, options.toArray(new Option[0])));
     }
 
+    public static StockfishClient createDefault() throws StockfishInitException {
+        return new StockfishClient(null, 1, Variant.DEFAULT, new HashSet<>());
+    }
+
+
+    /**
+     * Method to execute UCI command as Query in Stockfish without callback.
+     *
+     * @param query query to execute in Stockfish
+     * @see xyz.niflheim.stockfish.engine.enums.Query
+     */
     public void submit(Query query) {
         submit(query, null);
     }
 
+
+    /**
+     * Method to execute UCI command as Query in Stockfish with callback.
+     *
+     * @param query  query to execute in Stockfish
+     * @param result callback after executing query in Stockfish
+     * @see xyz.niflheim.stockfish.engine.enums.Query
+     */
     public void submit(Query query, Consumer<String> result) {
         executor.submit(() -> {
             Stockfish engine = engines.remove();
@@ -82,7 +120,17 @@ public class StockfishClient {
         });
     }
 
-    public void close() {
+
+    /**
+     * This method close all Stockfish instances that were created, as well as close all
+     * threads for processing responses. You must call this method when you close
+     * your program to avoid uncontrolled memory leaks.
+     * <p>
+     * Exceptions are thrown only after trying to close all remaining threads
+     *
+     * @throws StockfishEngineException when at least one of the processes could not be closed.
+     */
+    public void close() throws StockfishEngineException {
         AtomicBoolean error = new AtomicBoolean(false);
         AtomicReference<Exception> ex = new AtomicReference<>();
         engines.parallelStream().forEach(engine -> {
@@ -101,32 +149,59 @@ public class StockfishClient {
         }
     }
 
+
+    /**
+     * Standard Builder pattern to create {@link xyz.niflheim.stockfish.StockfishClient} instance.
+     *
+     * @see <a href="https://en.wikipedia.org/wiki/Builder_pattern">Wiki <b>Builder</b> pattern.</a>
+     */
     public static class Builder {
         private Set<Option> options = new HashSet<>();
         private Variant variant = Variant.DEFAULT;
         private String path = null;
         private int instances = 1;
 
+        /**
+         * @param num number of Stockfish core that will be launched to process requests asynchronously
+         * @return Builder to continue creating StockfishClient
+         */
         public final Builder setInstances(int num) {
             instances = num;
             return this;
         }
 
+        /**
+         * @param v variant of Stockfish core, see {@link xyz.niflheim.stockfish.engine.enums.Variant} enum
+         * @return Builder to continue creating StockfishClient
+         */
         public final Builder setVariant(Variant v) {
             variant = v;
             return this;
         }
 
+        /**
+         * @param o     Stockfish launch options, see {@link xyz.niflheim.stockfish.engine.enums.Option} enum
+         * @param value value of option
+         * @return Builder to continue creating StockfishClient
+         */
         public final Builder setOption(Option o, long value) {
             options.add(o.setValue(value));
             return this;
         }
 
+        /**
+         * @param path path to folder with Stockfish core (default assets/engine/)
+         * @return Builder to continue creating StockfishClient
+         */
         public final Builder setPath(String path) {
             this.path = path;
             return this;
         }
 
+        /**
+         * @return ready StockfishClient with fields set
+         * @throws StockfishInitException throws if Stockfish process can not be initialized, starter or bind
+         */
         public final StockfishClient build() throws StockfishInitException {
             return new StockfishClient(path, instances, variant, options);
         }

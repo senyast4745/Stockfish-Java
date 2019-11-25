@@ -14,9 +14,27 @@
  */
 package xyz.niflheim.stockfish.engine.enums;
 
+/**
+ * Types of query for execution in Stockfish.
+ *
+ * @author Niflheim
+ * @since 1.0
+ */
 public enum QueryType {
+    /**
+     * Get best move for this FEN position.
+     */
     Best_Move,
+    /**
+     * Get a response move to the user's move.
+     */
     Make_Move,
+    /**
+     * Get a list of all legal moves for this FEN position.
+     */
     Legal_Moves,
+    /**
+     *
+     */
     Checkers
 }

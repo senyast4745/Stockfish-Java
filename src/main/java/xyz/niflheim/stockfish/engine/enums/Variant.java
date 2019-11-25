@@ -14,6 +14,27 @@
  */
 package xyz.niflheim.stockfish.engine.enums;
 
+/**
+ * Variant of Stockfish process.
+ *
+ * @author Niflheim
+ * @since 1.0
+ */
 public enum Variant {
-    DEFAULT, BMI2, POPCNT, MODERN
+    /**
+     * Works on Unix and Windows machines
+     */
+    DEFAULT,
+    /**
+     * Works on Unix and Windows machines
+     */
+    BMI2,
+    /**
+     * Works on Windows machines
+     */
+    POPCNT,
+    /**
+     * Works on Unix machines
+     */
+    MODERN
 }

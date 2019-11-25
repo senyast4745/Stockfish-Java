@@ -28,6 +28,15 @@ public class Query {
         this.movetime = movetime;
     }
 
+    public Query(QueryType type, String fen, String move, int difficulty, int depth, long movetime) {
+        this.type = type;
+        this.fen = fen;
+        this.move = move;
+        this.difficulty = difficulty;
+        this.depth = depth;
+        this.movetime = movetime;
+    }
+
     public QueryType getType() {
         return type;
     }
@@ -93,6 +102,10 @@ public class Query {
 
             if (fen == null)
                 throw new IllegalStateException("Query is missing FEN.");
+
+            if (move != null) {
+                return new Query(type, fen, move, difficulty, depth, movetime);
+            }
 
             return new Query(type, fen, difficulty, depth, movetime);
         }

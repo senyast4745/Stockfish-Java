@@ -56,25 +56,13 @@ abstract class UCIEngine {
     }
 
     String readLine(String expected) {
-        try {
-            String line;
-
-            while ((line = input.readLine()) != null) {
-                if (line.startsWith(expected))
-                    return line;
-            }
-
-            return null;
-        } catch (IOException e) {
-            throw new StockfishEngineException(e);
-        }
+        return input.lines().filter(l -> l.startsWith(expected)).findFirst().orElse(null);
     }
 
     List<String> readResponse(String expected) {
         try {
             List<String> lines = new ArrayList<>();
             String line;
-
             while ((line = input.readLine()) != null) {
                 lines.add(line);
 
