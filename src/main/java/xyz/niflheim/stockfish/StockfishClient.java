@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -45,7 +46,7 @@ import java.util.function.Consumer;
  */
 public class StockfishClient {
 
-    private final Log logger = LogFactory.getLog(StockfishClient.class);
+    private static final Log log = LogFactory.getLog(StockfishClient.class);
 
     private ExecutorService executor, callback;
     private Queue<Stockfish> engines;
@@ -68,11 +69,6 @@ public class StockfishClient {
         for (int i = 0; i < instances; i++)
             engines.add(new Stockfish(path, variant, options.toArray(new Option[0])));
     }
-
-    public static StockfishClient createDefault() throws StockfishInitException {
-        return new StockfishClient(null, 1, Variant.DEFAULT, new HashSet<>());
-    }
-
 
     /**
      * Method to execute UCI command as Query in Stockfish without callback.
@@ -131,6 +127,10 @@ public class StockfishClient {
      * @throws StockfishEngineException when at least one of the processes could not be closed.
      */
     public void close() throws StockfishEngineException {
+
+        awaitTerminationAfterShutdown(executor);
+        awaitTerminationAfterShutdown(callback);
+
         AtomicBoolean error = new AtomicBoolean(false);
         AtomicReference<Exception> ex = new AtomicReference<>();
         engines.parallelStream().forEach(engine -> {
@@ -139,13 +139,28 @@ public class StockfishClient {
             } catch (IOException | StockfishEngineException e) {
                 ex.set(e);
                 error.compareAndSet(false, true);
-                logger.fatal("Can not stop Stockfish. Please, close it manually.", e);
+                log.fatal("Can not stop Stockfish. Please, close it manually.", e);
             }
         });
-        executor.shutdown();
-        callback.shutdown();
         if (error.get()) {
             throw new StockfishEngineException("Error while closing Stockfish threads", ex.get());
+        }
+    }
+
+
+    /**
+     * Shutdown all threads in thread pool after executing all tasks with 1 second delay.;
+     *
+     * @param threadPool thread pool to shutdown
+     */
+    private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(1, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
         }
     }
 
