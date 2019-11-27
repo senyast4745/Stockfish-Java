@@ -4,6 +4,7 @@ plugins {
     id 'application'
     id 'idea'
     id 'java'
+    id 'maven-publish'
 }
 
 group 'Niflheim'
@@ -20,9 +21,10 @@ repositories {
     jcenter()
     mavenCentral()
 }
-repositories{
+repositories {
     mavenCentral()
 }
+
 class Version {
     String major, minor, revision, build
 
@@ -47,11 +49,26 @@ dependencies {
 }
 
 jar {
- /*   from ('assets'){
-
-    }*/
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest {
         attributes 'Main-Class': 'xyz.niflheim.stockfish.StockfishTester'
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/senyast4745/Stockfish-Java")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GPR_USER")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
     }
 }
