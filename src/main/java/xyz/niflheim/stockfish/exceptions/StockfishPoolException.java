@@ -14,6 +14,13 @@
  */
 package xyz.niflheim.stockfish.exceptions;
 
+/**
+ * Never throws.
+ *
+ * @author Niflheim
+ * @since 1.0
+ */
+@SuppressWarnings("unused")
 public class StockfishPoolException extends IllegalStateException {
     public StockfishPoolException() {
         super();

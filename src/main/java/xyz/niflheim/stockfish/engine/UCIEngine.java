@@ -57,15 +57,9 @@ abstract class UCIEngine {
 
     String readLine(String expected) {
         try {
-            String line;
-
-            while ((line = input.readLine()) != null) {
-                if (line.startsWith(expected))
-                    return line;
-            }
-
-            return null;
-        } catch (IOException e) {
+            return input.lines().sequential().filter(l -> l.startsWith(expected)).findFirst()
+                    .orElseThrow(() -> new StockfishEngineException("Can not find expected line: " + expected));
+        } catch (UncheckedIOException e) {
             throw new StockfishEngineException(e);
         }
     }
@@ -74,15 +68,20 @@ abstract class UCIEngine {
         try {
             List<String> lines = new ArrayList<>();
             String line;
-
+            boolean isPresent = false;
             while ((line = input.readLine()) != null) {
                 lines.add(line);
 
-                if (line.startsWith(expected))
+                if (line.startsWith(expected)) {
+                    isPresent = true;
                     break;
+                }
             }
-
-            return lines;
+            if (isPresent) {
+                return lines;
+            } else {
+                throw new StockfishEngineException("Can not find expected line: " + expected);
+            }
         } catch (IOException e) {
             throw new StockfishEngineException(e);
         }

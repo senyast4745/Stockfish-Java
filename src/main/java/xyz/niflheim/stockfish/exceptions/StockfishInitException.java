@@ -14,19 +14,48 @@
  */
 package xyz.niflheim.stockfish.exceptions;
 
+/**
+ * Thrown when an error occurred in the Stockfish instance process during the execution of the UCI query.
+ *
+ * @author Niflheim\
+ * @since 1.0
+ */
+@SuppressWarnings("unused")
 public class StockfishInitException extends Exception {
+
+    /**
+     * Constructs a {@code StockfishInitException} with no detail message.
+     */
     public StockfishInitException() {
         super();
     }
 
+    /**
+     * Constructs a {@code StockfishInitException} with the specified
+     * detail message.
+     *
+     * @param message the detail message.
+     */
     public StockfishInitException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a {@code StockfishInitException} with the specified
+     * detail message and the exception that caused.
+     *
+     * @param message the detail message.
+     * @param cause   the exception that caused.
+     */
     public StockfishInitException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructs a {@code StockfishInitException} with the exception that caused.
+     *
+     * @param cause the exception that caused.
+     */
     public StockfishInitException(Throwable cause) {
         super(cause);
     }

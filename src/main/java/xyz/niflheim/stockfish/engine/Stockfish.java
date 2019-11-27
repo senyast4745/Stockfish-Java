@@ -22,18 +22,19 @@ import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 import java.io.IOException;
 import java.util.List;
 
-public class Stockfish extends UCIEngine {
-    public Stockfish(String path, Variant variant, Option... options) throws StockfishInitException {
+class Stockfish extends UCIEngine {
+
+    Stockfish(String path, Variant variant, Option... options) throws StockfishInitException {
         super(path, variant, options);
     }
 
-    public String makeMove(Query query) {
+    String makeMove(Query query) {
         waitForReady();
         sendCommand("position fen " + query.getFen() + " moves " + query.getMove());
         return getFen();
     }
 
-    public String getCheckers(Query query) {
+    String getCheckers(Query query) {
         waitForReady();
         sendCommand("position fen " + query.getFen());
 
@@ -43,7 +44,7 @@ public class Stockfish extends UCIEngine {
         return readLine("Checkers: ").substring(10);
     }
 
-    public String getBestMove(Query query) {
+    String getBestMove(Query query) {
         if (query.getDifficulty() >= 0) {
             waitForReady();
             sendCommand("setoption name Skill Level value " + query.getDifficulty());
@@ -66,7 +67,7 @@ public class Stockfish extends UCIEngine {
         return readLine("bestmove").substring(9).split("\\s+")[0];
     }
 
-    public String getLegalMoves(Query query) {
+    String getLegalMoves(Query query) {
         waitForReady();
         sendCommand("position fen " + query.getFen());
 
@@ -83,7 +84,7 @@ public class Stockfish extends UCIEngine {
         return legal.toString();
     }
 
-    public void close() throws IOException {
+    void close() throws IOException {
         try {
             sendCommand("quit");
         } finally {
