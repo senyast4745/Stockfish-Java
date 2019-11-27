@@ -21,6 +21,8 @@ package xyz.niflheim.stockfish.engine.enums;
  * @see <a href="https://github.com/official-stockfish/Stockfish">Official Stochfish <b>Github</b> repository</a>
  * @since 1.0
  */
+
+@SuppressWarnings("unused")
 public enum Option {
     /**
      * A positive value for contempt favors middle game positions and avoids draws.

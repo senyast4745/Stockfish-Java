@@ -17,7 +17,7 @@ package xyz.niflheim.stockfish.engine.enums;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Class Query to Stockfish, which will be converted to UCI
  */
 public class Query {
     private QueryType type;
@@ -25,7 +25,8 @@ public class Query {
     private int difficulty, depth;
     private long movetime;
 
-    private Query(QueryType type, String fen, int difficulty, int depth, long movetime) {
+    @SuppressWarnings("WeakerAccess")
+    public Query(QueryType type, String fen, int difficulty, int depth, long movetime) {
         this.type = type;
         this.fen = fen;
         this.difficulty = difficulty;
@@ -33,7 +34,8 @@ public class Query {
         this.movetime = movetime;
     }
 
-    private Query(QueryType type, String fen, String move, int difficulty, int depth, long movetime) {
+    @SuppressWarnings("WeakerAccess")
+    public Query(QueryType type, String fen, String move, int difficulty, int depth, long movetime) {
         this.type = type;
         this.fen = fen;
         this.move = move;
@@ -43,49 +45,58 @@ public class Query {
     }
 
     /**
-     * @return
+     * @return type of UCI query
+     * @see QueryType
+     * @see <a href="http://wbec-ridderkerk.nl/html/UCIProtocol.html">Univesal Chess Protocol Documentation</a>
      */
     public QueryType getType() {
         return type;
     }
 
     /**
-     * @return
+     * @return FEN chessboard position as string
+     * @see <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">Wiki FEN</a>
      */
     public String getFen() {
         return fen;
     }
 
     /**
-     * @return
+     * @return users move as string in USI
+     * @see <a href="http://wbec-ridderkerk.nl/html/UCIProtocol.html">Univesal Chess Protocol Documentation</a>
      */
     public String getMove() {
         return move;
     }
 
     /**
-     * @return
+     * @return the difficulty that will be installed on Stockfish when considering a move,
+     * if the number is less than 1, then the standard difficulty will be set
      */
     public int getDifficulty() {
         return difficulty;
     }
 
     /**
-     * @return
+     * @return the depth to which Stockfish will calculate the moves.
+     * if the number is less than 1, then the standard difficulty will be set
      */
     public int getDepth() {
         return depth;
     }
 
     /**
-     * @return
+     * @return the minimum time that Stockfish will think about its moves.
+     * if the number is less than 1, then the standard difficulty will be set
      */
     public long getMovetime() {
         return movetime;
     }
 
     /**
+     * Standard Builder pattern to create {@link Query} instance.
      *
+     * @see <a href="https://en.wikipedia.org/wiki/Builder_pattern">Wiki <b>Builder</b> pattern.</a>
      */
     public static class Builder {
         private static final String START_REGEX = "^";
@@ -102,8 +113,11 @@ public class Query {
         private long movetime = -1;
 
         /**
-         * @param type
-         * @param fen
+         * @param type type of UCI query
+         * @param fen  FEN chessboard position as string
+         * @see QueryType
+         * @see <a href="http://wbec-ridderkerk.nl/html/UCIProtocol.html">Univesal Chess Protocol Documentation</a>
+         * @see <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation">Wiki FEN</a>
          */
         public Builder(QueryType type, String fen) {
             this.fen = fen;
@@ -111,9 +125,9 @@ public class Query {
         }
 
         /**
-         * @param move
-         * @return
-         * @throws IllegalArgumentException
+         * @param move users move in USI
+         * @return Builder
+         * @throws IllegalArgumentException if the incoming line is not a chess move
          */
         public Builder setMove(String move) throws IllegalArgumentException {
             if (move == null || !movePattern.matcher(move).matches()) {
@@ -124,8 +138,9 @@ public class Query {
         }
 
         /**
-         * @param difficulty
-         * @return
+         * @param difficulty the difficulty that will be installed on Stockfish when considering a move,
+         *                   if the number is less than 1, then the standard difficulty will be set
+         * @return Builder
          */
         public Builder setDifficulty(int difficulty) {
             this.difficulty = difficulty;
@@ -133,8 +148,9 @@ public class Query {
         }
 
         /**
-         * @param depth
-         * @return
+         * @param depth the depth to which Stockfish will calculate the moves.
+         *              if the number is less than 1, then the standard difficulty will be set
+         * @return Builder
          */
         public Builder setDepth(int depth) {
             this.depth = depth;
@@ -142,8 +158,9 @@ public class Query {
         }
 
         /**
-         * @param movetime
-         * @return
+         * @param movetime the minimum time that Stockfish will think about its moves.
+         *                 if the number is less than 1, then the standard difficulty will be set
+         * @return Builder
          */
         public Builder setMovetime(long movetime) {
             this.movetime = movetime;
@@ -151,9 +168,11 @@ public class Query {
         }
 
         /**
-         * @return
-         * @throws IllegalArgumentException
-         * @throws IllegalStateException
+         * Build Query.
+         *
+         * @return query to be converted to a UCI request to StockFish
+         * @throws IllegalArgumentException if the incoming line is not in FEN
+         * @throws IllegalStateException if QueryType or FEN is null
          */
         public Query build() throws IllegalArgumentException, IllegalStateException {
             if (type == null)

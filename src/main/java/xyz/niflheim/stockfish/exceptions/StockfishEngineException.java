@@ -15,12 +15,12 @@
 package xyz.niflheim.stockfish.exceptions;
 
 /**
- * Thrown when {@link java.io.IOException} occurred during Stockfish initialization.
+ * Thrown when {@link java.io.IOException} occurred during Stockfish instance initialization.
  *
  * @author Niflheim
- * @see xyz.niflheim.stockfish.engine.Stockfish
  * @since 1.0
  */
+@SuppressWarnings("unused")
 public class StockfishEngineException extends RuntimeException {
     /**
      * Constructs a {@code StockfishEngineException} with no detail message.

@@ -15,12 +15,12 @@
 package xyz.niflheim.stockfish.exceptions;
 
 /**
- * Thrown when an error occurred in the Stockfish process during the execution of the UCI query.
+ * Thrown when an error occurred in the Stockfish instance process during the execution of the UCI query.
  *
- * @author Niflheim
- * @see xyz.niflheim.stockfish.engine.Stockfish
+ * @author Niflheim\
  * @since 1.0
  */
+@SuppressWarnings("unused")
 public class StockfishInitException extends Exception {
 
     /**

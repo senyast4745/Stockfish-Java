@@ -12,11 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package xyz.niflheim.stockfish;
+package xyz.niflheim.stockfish.engine;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import xyz.niflheim.stockfish.engine.Stockfish;
 import xyz.niflheim.stockfish.engine.enums.Option;
 import xyz.niflheim.stockfish.engine.enums.Query;
 import xyz.niflheim.stockfish.engine.enums.Variant;
@@ -36,7 +35,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
- * The StockfishClient for managing Stockfish processes, as well as for interacting with the Stockfish API using Query.
+ * The StockfishClient for managing Stockfish processes,
+ * as well as for interacting with the Stockfish API using {@link Query}.
  * <p>
  *
  * @author Niflheim
@@ -76,6 +76,7 @@ public class StockfishClient {
      * @param query query to execute in Stockfish
      * @see xyz.niflheim.stockfish.engine.enums.Query
      */
+    @SuppressWarnings("unused")
     public void submit(Query query) {
         submit(query, null);
     }
@@ -147,12 +148,6 @@ public class StockfishClient {
         }
     }
 
-
-    /**
-     * Shutdown all threads in thread pool after executing all tasks with 1 second delay.;
-     *
-     * @param threadPool thread pool to shutdown
-     */
     private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
         threadPool.shutdown();
         try {
@@ -166,7 +161,7 @@ public class StockfishClient {
 
 
     /**
-     * Standard Builder pattern to create {@link xyz.niflheim.stockfish.StockfishClient} instance.
+     * Standard Builder pattern to create {@link StockfishClient} instance.
      *
      * @see <a href="https://en.wikipedia.org/wiki/Builder_pattern">Wiki <b>Builder</b> pattern.</a>
      */
