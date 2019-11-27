@@ -67,9 +67,8 @@ publishing {
         }
     }
     publications {
-        create<MavenPublication>("REPOSITORY") {
-            from(components["java"])
-            artifact(tasks["fatJar"])
+        gpr(MavenPublication) {
+            from(components.java)
         }
     }
 }
