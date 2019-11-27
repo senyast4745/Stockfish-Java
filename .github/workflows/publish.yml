@@ -21,8 +21,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: echo $GITHUB_ACTOR $GITHUB_TOKEN
     - name: Run tests
-      run: ./gradlew test --info
-    - name: Echo
+      run: ./gradlew build
+    - name: Publish
       env: 
         GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
