@@ -61,14 +61,15 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/senyast4745/Stockfish-Java")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GPR_USER")
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
                 password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
     publications {
-        gpr(MavenPublication) {
-            from(components.java)
+        create<MavenPublication>("REPOSITORY") {
+            from(components["java"])
+            artifact(tasks["fatJar"])
         }
     }
 }
