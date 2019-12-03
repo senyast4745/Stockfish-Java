@@ -1,5 +1,6 @@
 /* Stockfish Java's build.gradle */
 
+
 plugins {
     id 'application'
     id 'idea'
@@ -50,9 +51,11 @@ dependencies {
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    include 'assets/images/*'
     manifest {
-        attributes 'Main-Class': 'xyz.niflheim.stockfish.StockfishTester'
+        attributes 'Main-Class': 'com.github.danildorogoy.Main'
     }
+
 }
 
 publishing {
