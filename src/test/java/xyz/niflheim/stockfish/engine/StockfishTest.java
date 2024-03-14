@@ -34,7 +34,7 @@ class StockfishTest {
         try {
             stockfish = new Stockfish(null, Variant.DEFAULT);
         } catch (StockfishInitException e) {
-            log.error("error while create Stockfish client: ", e);
+            log.error("error while creating Stockfish client: ", e);
             fail(e);
         }
     }
@@ -44,7 +44,7 @@ class StockfishTest {
         try {
             stockfish.close();
         } catch (IOException | StockfishEngineException e) {
-            log.error("error while close Stockfish client: ", e.getCause());
+            log.error("error while closing Stockfish client: ", e.getCause());
         }
     }
 
@@ -62,8 +62,10 @@ class StockfishTest {
         try {
             String incorrectCommand = "incorrect command";
             stockfish.sendCommand(incorrectCommand);
-            assertArrayEquals(new String[]{GREETING_STOCKFISH, ERROR_STOCKFISH + incorrectCommand},
-                    stockfish.readResponse(ERROR_STOCKFISH).toArray());
+            List<String> response = stockfish.readResponse(ERROR_STOCKFISH);
+            //e.g. starts with something e.g. "Stockfish 16.1 by the Stockfish developers ...."
+            assertTrue(Pattern.compile("^Stockfish [0-9]{2}").matcher(response.get(0)).find());
+            assertEquals(response.get(1),ERROR_STOCKFISH + incorrectCommand);
 
             incorrectCommand = "one more incorrect command";
             stockfish.sendCommand(incorrectCommand);

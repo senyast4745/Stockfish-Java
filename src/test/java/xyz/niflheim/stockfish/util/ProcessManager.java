@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static xyz.niflheim.stockfish.engine.util.Util.ENGINE_FILE_NAME_PREFIX;
+
 public class ProcessManager {
 
     /**
@@ -15,7 +17,7 @@ public class ProcessManager {
      * @throws IOException when can not execute Unix command
      */
     public static long getProcessNumber() throws IOException {
-        return getProcessNumber("stockfish_10");
+        return getProcessNumber(ENGINE_FILE_NAME_PREFIX);
     }
 
 
@@ -25,7 +27,13 @@ public class ProcessManager {
      * @throws IOException when can not execute Unix command
      */
     public static long getProcessNumber(String process) throws IOException {
-        Process p = Runtime.getRuntime().exec("ps -few");
+        String processListCommand = null;
+        if(OSValidator.isUnix()) {
+            processListCommand = "ps -few";
+        } else if (OSValidator.isWindows()) {
+            processListCommand = "tasklist /FI \"IMAGENAME eq " + ENGINE_FILE_NAME_PREFIX + "*\" ";
+        }
+        Process p = Runtime.getRuntime().exec(processListCommand);
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
         long ans = input.lines().filter(l -> l.contains(process)).count();
         input.close();
@@ -37,12 +45,25 @@ public class ProcessManager {
      *
      * @throws IOException when can not execute Unix command
      */
-    public static void killStockfishProcess() throws IOException {
-        Process p = Runtime.getRuntime().exec("ps -few");
+    public static void killStockfishProcess() throws IOException, InterruptedException {
+        String processListingCommand = null;
+        if(OSValidator.isUnix()) {
+            processListingCommand = "ps -few";
+
+        } else if (OSValidator.isWindows()) {
+            processListingCommand = "tasklist /FI \"IMAGENAME eq "+ ENGINE_FILE_NAME_PREFIX + "*\"";
+        }
+        Process p = Runtime.getRuntime().exec(processListingCommand);
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        List<String> pids = input.lines().filter(l -> l.contains("stockfish_10")).collect(Collectors.toList());
+        List<String> pids = input.lines().filter(l -> l.contains(ENGINE_FILE_NAME_PREFIX)).collect(Collectors.toList());
         String pid = pids.get(0).split("\\s+")[1];
-        Runtime.getRuntime().exec("kill " + pid);
+        if (OSValidator.isUnix()) {
+            Runtime.getRuntime().exec("kill " + pid);
+        } else if (OSValidator.isWindows()) {
+            Runtime.getRuntime().exec("taskkill /F /PID " + pid);
+            //it seems like it takes some time for a process to die on windows
+            Thread.sleep(200);
+        }
         input.close();
     }
 }
