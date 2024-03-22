@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static xyz.niflheim.stockfish.engine.util.Util.ENGINE_FILE_NAME_PREFIX;
+import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_PREFIX;
 
 public class ProcessManager {
 

@@ -63,8 +63,9 @@ class StockfishTest {
             String incorrectCommand = "incorrect command";
             stockfish.sendCommand(incorrectCommand);
             List<String> response = stockfish.readResponse(ERROR_STOCKFISH);
-            //e.g. starts with something e.g. "Stockfish 16.1 by the Stockfish developers ...."
-            assertTrue(Pattern.compile("^Stockfish [0-9]{2}").matcher(response.get(0)).find());
+            // to match e.g. "Stockfish 16.1 by the Stockfish developers (see AUTHORS file)",
+            // "Stockfish 10 64 by T. Romstad, M. Costalba, J. Kiiski, G. Linscott" etc
+            assertTrue(Pattern.compile("^Stockfish [1-9][0-9]").matcher(response.get(0)).find());
             assertEquals(response.get(1),ERROR_STOCKFISH + incorrectCommand);
 
             incorrectCommand = "one more incorrect command";

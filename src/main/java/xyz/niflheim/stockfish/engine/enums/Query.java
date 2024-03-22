@@ -109,7 +109,7 @@ public class Query {
 
 
     private boolean isWithinLimits() {
-        if (getType().equals(Best_Move) && ((getDepth() < 0 || getMovetime() < 0)
+        if (Best_Move.equals(getType()) && ((getDepth() < 0 || getMovetime() < 0)
                 || (getDepth() > MAX_DEPTH || getMovetime() > MAX_TIME))) {
             return false;
         }

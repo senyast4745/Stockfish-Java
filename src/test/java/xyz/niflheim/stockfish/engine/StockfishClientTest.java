@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static xyz.niflheim.stockfish.engine.util.Util.ENGINE_FILE_NAME_PREFIX;
-import static xyz.niflheim.stockfish.engine.util.Util.ENGINE_FILE_NAME_SUFFIX;
+import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_PREFIX;
+import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_SUFFIX;
 import static xyz.niflheim.stockfish.util.ProcessManager.getProcessNumber;
 import static xyz.niflheim.stockfish.util.ProcessManager.killStockfishProcess;
 import static xyz.niflheim.stockfish.util.StringUtil.*;

@@ -18,15 +18,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import xyz.niflheim.stockfish.engine.enums.Option;
 import xyz.niflheim.stockfish.engine.enums.Variant;
+import xyz.niflheim.stockfish.engine.util.FileEngineUtil;
 import xyz.niflheim.stockfish.exceptions.StockfishEngineException;
 import xyz.niflheim.stockfish.exceptions.StockfishInitException;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static xyz.niflheim.stockfish.engine.util.Util.*;
 
 abstract class UCIEngine {
 
@@ -34,12 +32,11 @@ abstract class UCIEngine {
     final BufferedReader input;
     final BufferedWriter output;
     final Process process;
-    int engineVersion = 0;
 
     UCIEngine(String path, Variant variant, Integer engineVersion, Option... options) throws StockfishInitException {
         try {
 
-            process = Runtime.getRuntime().exec(getPath(variant, path, engineVersion));
+            process = Runtime.getRuntime().exec(FileEngineUtil.getPath(variant, path, engineVersion));
             input = new BufferedReader(new InputStreamReader(process.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
@@ -104,52 +101,4 @@ abstract class UCIEngine {
         sendCommand(option.toString());
     }
 
-    private String getPath(Variant variant, String override) {
-        return getPath(variant, override, null);
-    }
-
-    private String getPath(Variant variant, String override, Integer engineVersion) {
-        Optional<Integer> versionOptional = SUPPORTED_VERSIONS.values().stream().filter(v -> v == engineVersion).findFirst();
-        if (versionOptional.isPresent()) {
-            this.engineVersion = versionOptional.get();
-        } else {
-            if (engineVersion != null &&  engineVersion != SUPPORTED_VERSIONS.entrySet().iterator().next().getValue()) {
-                log.info("Version " + engineVersion + " not found. Defaulting to " + SUPPORTED_VERSIONS.entrySet().iterator().next().getValue());
-            }
-            this.engineVersion = SUPPORTED_VERSIONS.values().stream().max(Integer::compareTo).get();
-        }
-        StringBuilder path = new StringBuilder(override == null ?
-                ASSETS_LOCATION + ENGINE_FILE_NAME_PREFIX + this.engineVersion + ENGINE_FILE_NAME_SUFFIX :
-                override +  ENGINE_FILE_NAME_PREFIX + this.engineVersion + ENGINE_FILE_NAME_SUFFIX);
-
-        if (System.getProperty("os.name").toLowerCase().contains("win"))
-            switch (variant) {
-                case DEFAULT:
-                    path.append(".exe");
-                    break;
-                case BMI2:
-                    path.append("_bmi2.exe");
-                    break;
-                case POPCNT:
-                    path.append("_popcnt.exe");
-                    break;
-                default:
-                    throw new StockfishEngineException("Illegal variant provided.");
-            }
-        else
-            switch (variant) {
-                case DEFAULT:
-                    break;
-                case BMI2:
-                    path.append("_bmi2");
-                    break;
-                case MODERN:
-                    path.append("_modern");
-                    break;
-                default:
-                    throw new StockfishEngineException("Illegal variant provided.");
-            }
-
-        return path.toString();
-    }
 }
