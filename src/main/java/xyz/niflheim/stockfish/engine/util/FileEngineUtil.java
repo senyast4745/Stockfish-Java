@@ -28,13 +28,12 @@ public class FileEngineUtil {
         try {
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
                     Paths.get(ASSETS_LOCATION), FILE_MASK)) {
-
+                Pattern pattern = Pattern.compile("[1-9][0-9]");
                 log.debug("Supported engines:");
                 for (Path executable : assetsDir) {
                     log.debug(executable.toString());
 
                     String mydata = executable.toString();
-                    Pattern pattern = Pattern.compile("[1-9][0-9]");
                     Matcher matcher = pattern.matcher(mydata);
                     if (matcher.find()) {
                         SUPPORTED_VERSIONS.add(Integer.parseInt(matcher.group(0)));
@@ -69,7 +68,7 @@ public class FileEngineUtil {
             log.info("No version was specified. Defaulting to highest available: " + engineVersion);
         }
 
-        StringBuilder path = new StringBuilder(override == null ?
+        StringBuilder path = new StringBuilder(override == null || "".equals(override.trim()) ?
                 ASSETS_LOCATION + ENGINE_FILE_NAME_PREFIX + engineVersion + ENGINE_FILE_NAME_SUFFIX :
                 override +  ENGINE_FILE_NAME_PREFIX + engineVersion + ENGINE_FILE_NAME_SUFFIX);
 

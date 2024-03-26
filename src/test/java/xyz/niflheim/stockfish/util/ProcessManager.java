@@ -3,8 +3,7 @@ package xyz.niflheim.stockfish.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_PREFIX;
 
@@ -54,16 +53,25 @@ public class ProcessManager {
             processListingCommand = "tasklist /FI \"IMAGENAME eq "+ ENGINE_FILE_NAME_PREFIX + "*\"";
         }
         Process p = Runtime.getRuntime().exec(processListingCommand);
-        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        List<String> pids = input.lines().filter(l -> l.contains(ENGINE_FILE_NAME_PREFIX)).collect(Collectors.toList());
-        String pid = pids.get(0).split("\\s+")[1];
-        if (OSValidator.isUnix()) {
-            Runtime.getRuntime().exec("kill " + pid);
-        } else if (OSValidator.isWindows()) {
-            Runtime.getRuntime().exec("taskkill /F /PID " + pid);
-            //it seems like it takes some time for a process to die on windows
-            Thread.sleep(200);
+        String pid = getPid(p);
+        if (pid != null) {
+            if (OSValidator.isUnix()) {
+                Runtime.getRuntime().exec("kill " + pid);
+            } else if (OSValidator.isWindows()) {
+                Runtime.getRuntime().exec("taskkill /F /PID " + pid);
+                //it seems like it takes some time for a process to die on windows
+                Thread.sleep(200);
+            }
         }
+    }
+
+    private static String getPid(Process p) throws IOException {
+        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        Optional<String> pidOptional = input.lines().filter(l -> l.contains(ENGINE_FILE_NAME_PREFIX)).findFirst();
         input.close();
+        if (pidOptional.isPresent()) {
+            return pidOptional.get().split("\\s+")[1];
+        }
+        return null;
     }
 }
