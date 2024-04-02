@@ -66,12 +66,12 @@ public class ProcessManager {
     }
 
     private static String getPid(Process p) throws IOException {
-        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        Optional<String> pidOptional = input.lines().filter(l -> l.contains(ENGINE_FILE_NAME_PREFIX)).findFirst();
-        input.close();
-        if (pidOptional.isPresent()) {
-            return pidOptional.get().split("\\s+")[1];
+        try (BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+            Optional<String> pidOptional = input.lines().filter(l -> l.contains(ENGINE_FILE_NAME_PREFIX)).findFirst();
+            if (pidOptional.isPresent()) {
+                return pidOptional.get().split("\\s+")[1];
+            }
+            return null;
         }
-        return null;
     }
 }

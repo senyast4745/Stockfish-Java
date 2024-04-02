@@ -48,10 +48,10 @@ Information regarding Stockfish Java as well as full usage of the client is deta
 **Owners and Developers**
 * [NiflheimDev](https://github.com/NiflheimDev)
 * [Kirbyquerby](https://github.com/Kirbyquerby)
-* [Tim Bits](https://github.com/tim-bits)
 
 **Other Contributors**
-* This could be you :)
+* [Arseny Druzhinin](https://github.com/senyast4745)
+* [Tim Bits](https://github.com/tim-bits)
 
 ## Dependencies
 * [Stockfish](https://stockfishchess.org/)
