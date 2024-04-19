@@ -45,6 +45,8 @@ class Stockfish extends UCIEngine {
     }
 
     String getBestMove(Query query) {
+        query.normalize();
+
         if (query.getDifficulty() >= 0) {
             waitForReady();
             sendCommand("setoption name Skill Level value " + query.getDifficulty());
@@ -63,7 +65,6 @@ class Stockfish extends UCIEngine {
 
         waitForReady();
         sendCommand(command.toString());
-
         return readLine("bestmove").substring(9).split("\\s+")[0];
     }
 

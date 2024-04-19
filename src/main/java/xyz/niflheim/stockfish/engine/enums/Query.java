@@ -16,10 +16,16 @@ package xyz.niflheim.stockfish.engine.enums;
 
 import java.util.regex.Pattern;
 
+import static xyz.niflheim.stockfish.engine.enums.QueryType.Best_Move;
+
 /**
  * Class Query to Stockfish, which will be converted to UCI
  */
 public class Query {
+
+    public static final int MAX_DEPTH = 15;
+
+    private static final int MAX_TIME = 4000; //4 sec
     private QueryType type;
     private String fen, move;
     private int difficulty, depth;
@@ -91,6 +97,34 @@ public class Query {
      */
     public long getMovetime() {
         return movetime;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    public void setMovetime(int movetime) {
+        this.movetime = movetime;
+    }
+
+
+    private boolean isWithinLimits() {
+        if (Best_Move.equals(getType()) && ((getDepth() < 0 || getMovetime() < 0)
+                || (getDepth() > MAX_DEPTH || getMovetime() > MAX_TIME))) {
+            return false;
+        }
+        return true;
+    }
+
+    public void normalize() {
+        if (!isWithinLimits()) {
+            if(getDepth() < 0 || getDepth() > MAX_DEPTH) {
+                setDepth(MAX_DEPTH);
+            }
+            if(getMovetime() < 0 || getMovetime() > MAX_TIME) {
+                setMovetime(MAX_TIME);
+            }
+        }
     }
 
     /**

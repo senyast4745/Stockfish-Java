@@ -16,6 +16,8 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_PREFIX;
+import static xyz.niflheim.stockfish.engine.util.FileEngineUtil.ENGINE_FILE_NAME_SUFFIX;
 import static xyz.niflheim.stockfish.util.ProcessManager.getProcessNumber;
 import static xyz.niflheim.stockfish.util.ProcessManager.killStockfishProcess;
 import static xyz.niflheim.stockfish.util.StringUtil.*;
@@ -48,9 +50,9 @@ class StockfishClientTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                assertEquals(instanceNumber, getProcessNumber("stockfish_10"));
+                assertEquals(instanceNumber, getProcessNumber(ENGINE_FILE_NAME_PREFIX));
                 client.close();
-                assertEquals(0, getProcessNumber("stockfish_10_x64_bmi2"));
+                assertEquals(0, getProcessNumber(ENGINE_FILE_NAME_PREFIX + ENGINE_FILE_NAME_SUFFIX + "_bmi2"));
 
                 instanceNumber = 2;
                 client = new StockfishClient.Builder()
@@ -84,23 +86,21 @@ class StockfishClientTest {
      */
     @Test
     void killOneStockfishTest() {
-        if (OSValidator.isUnix()) {
-            try {
-                int instanceNumber = 4;
-                StockfishClient client = new StockfishClient.Builder()
-                        .setInstances(instanceNumber)
-                        .setPath("assets/engines/")
-                        .setOption(Option.Threads, 2)
-                        .setVariant(Variant.DEFAULT)
-                        .build();
-                assertEquals(instanceNumber, getProcessNumber());
-                killStockfishProcess();
-                assertEquals(instanceNumber - 1, getProcessNumber());
-                assertThrows(StockfishEngineException.class, client::close);
-                assertEquals(0, getProcessNumber());
-            } catch (Exception e) {
-                fail(e);
-            }
+        try {
+            int instanceNumber = 4;
+            StockfishClient client = new StockfishClient.Builder()
+                    .setInstances(instanceNumber)
+                    .setPath("assets/engines/")
+                    .setOption(Option.Threads, 2)
+                    .setVariant(Variant.DEFAULT)
+                    .build();
+            assertEquals(instanceNumber, getProcessNumber());
+            killStockfishProcess();
+            assertEquals(instanceNumber - 1, getProcessNumber());
+            assertThrows(StockfishEngineException.class, client::close);
+            assertEquals(0, getProcessNumber());
+        } catch (Exception e) {
+            fail(e);
         }
     }
 

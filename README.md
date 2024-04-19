@@ -3,10 +3,13 @@
 [![license]](https://github.com/NiflheimDev/Stockfish-Java/tree/master/LICENSE)
 [![FAQ]](https://github.com/NiflheimDev/Stockfish-Java/wiki)
 
-<img align="right" src="https://i.imgur.com/BpbjurX.png" height="300" width="300">
+<img align="right" src="https://i.imgur.com/D3DIZQH.png" height="250" width="250">
 
 # Stockfish Java
-**Stockfish Java** is an open source asynchronous high level wrapper for the popular uci chess engine [Stockfish 10](https://stockfishchess.org/)
+**Stockfish Java** is an open source asynchronous high level wrapper for a very popular and the world strongest UCI
+chess engine [Stockfish](https://stockfishchess.org/).
+Stockfish Java is not tied to any specific Stockfish version: originally built on version 10, now is also supporting the
+latest version 16.
 
 ## Quick Start
 To start, create a Stockfish Client instance:
@@ -17,7 +20,7 @@ StockfishClient client = new StockfishClient.Builder()
         .build();
 ```
 This library allows multiple Stockfish instances to run concurrently to lessen the impact of thread blocking chess computation.
-By default, the client only creates one instance, but we can override that by setting the number in the builder. There are also 
+By default, the client only creates one instance, but we can override that by setting the number in the builder. There are also
 multiple variants of Stockfish. In the builder, we can specify BMI2, POPCNT (Windows only), or MODERN (Linux only). A general rule
 of thumb is to go with BMI2 first and if it crashes or is incompatible with your system, use POPCNT/MODERN depending on your operating
 system. If variant is not set in the builder, we default to the regular Stockfish binary.
@@ -47,7 +50,8 @@ Information regarding Stockfish Java as well as full usage of the client is deta
 * [Kirbyquerby](https://github.com/Kirbyquerby)
 
 **Other Contributors**
-* This could be you :)
+* [Arseny Druzhinin](https://github.com/senyast4745)
+* [Tim Bits](https://github.com/tim-bits)
 
 ## Dependencies
-* [Stockfish 10](https://stockfishchess.org/)
+* [Stockfish](https://stockfishchess.org/)
