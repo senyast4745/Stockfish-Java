@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import xyz.niflheim.stockfish.engine.enums.Variant;
 import xyz.niflheim.stockfish.exceptions.StockfishEngineException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -42,8 +43,8 @@ public class FileEngineUtil {
                 }
             }
             if (SUPPORTED_VERSIONS.isEmpty()) {
-                log.fatal("Following engines were not found: "
-                        + sb.delete(sb.length()-2, sb.length()-1) + ". Exiting...");
+                log.fatal("Following engines were not found:"
+                        + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File(".") + "/" + ASSETS_LOCATION + ". Exiting...");
                 System.exit(-1);
             }
         } catch (IOException e) {
