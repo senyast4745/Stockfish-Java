@@ -44,7 +44,7 @@ public class FileEngineUtil {
             }
             if (SUPPORTED_VERSIONS.isEmpty()) {
                 log.fatal("Following engines were not found:"
-                        + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File("") + "/" + ASSETS_LOCATION + ". Exiting...");
+                        + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File(".").getAbsolutePath() + "/" + ASSETS_LOCATION + ". Exiting...");
                 System.exit(-1);
             }
         } catch (IOException e) {
