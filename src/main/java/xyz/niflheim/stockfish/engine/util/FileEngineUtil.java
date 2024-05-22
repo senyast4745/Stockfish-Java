@@ -25,6 +25,7 @@ public class FileEngineUtil {
     public static Set<Integer> SUPPORTED_VERSIONS = new TreeSet<>(Comparator.reverseOrder());
 
     static {
+        StringBuilder sb = new StringBuilder();
         try {
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
                     Paths.get(ASSETS_LOCATION), FILE_MASK)) {
@@ -32,7 +33,7 @@ public class FileEngineUtil {
                 log.debug("Supported engines:");
                 for (Path executable : assetsDir) {
                     log.debug(executable.toString());
-
+                    sb.append(executable + ",");
                     String mydata = executable.toString();
                     Matcher matcher = pattern.matcher(mydata);
                     if (matcher.find()) {
@@ -41,7 +42,8 @@ public class FileEngineUtil {
                 }
             }
             if (SUPPORTED_VERSIONS.isEmpty()) {
-                log.fatal("No engines found. Exiting...");
+                log.fatal("Following engines were not found "
+                        + sb.delete(sb.length()-2, sb.length()-1) + ". Exiting...");
                 System.exit(-1);
             }
         } catch (IOException e) {
