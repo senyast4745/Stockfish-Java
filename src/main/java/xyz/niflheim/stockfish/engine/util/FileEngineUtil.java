@@ -60,7 +60,7 @@ public class FileEngineUtil {
 
                 File folder = new File("");
                 System.err.println(folder.getAbsolutePath());
-                try (Stream<Path> paths = Files.walk(Paths.get(""))) {
+                try (Stream<Path> paths = Files.walk(Paths.get(ASSETS_LOCATION))) {
                     paths
                             .filter(Files::isRegularFile)
                             .forEach(System.out::println);
