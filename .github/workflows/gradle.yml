@@ -39,4 +39,4 @@ jobs:
 
     - name: Build with Gradle
       working-directory: my-tools
-      run: ./gradlew build --info
+      run: ./gradlew clean build --info
