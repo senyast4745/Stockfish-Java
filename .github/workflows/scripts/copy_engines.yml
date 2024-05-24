@@ -1,0 +1,8 @@
+name: "My composite action"
+description: "My composite action to copy engines"
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        mkdir $GITHUB_WORKSPACE/assets/engine
+        cp "${{ github.action_path }}/assets/engine/*" $GITHUB_WORKSPACE/assets/engine
