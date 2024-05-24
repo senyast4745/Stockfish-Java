@@ -42,7 +42,7 @@ public class FileEngineUtil {
         try {
             log.fatal("bla!!!");
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
-                    Paths.get(ASSETS_LOCATION), FILE_MASK)) {
+                    Paths.get(ASSETS_LOCATION))) {
                 log.fatal("bla!");
                 Pattern pattern = Pattern.compile("[1-9][0-9]");
                 log.fatal("Supported engines:");
