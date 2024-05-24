@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class FileEngineUtil {
     private static final Log log = LogFactory.getLog(FileEngineUtil.class);
@@ -59,12 +60,10 @@ public class FileEngineUtil {
 
                 File folder = new File("");
                 System.err.println(folder.getAbsolutePath());
-                for (final File fileEntry : folder.listFiles()) {
-//                    if (fileEntry.isDirectory()) {
-//                        listFilesForFolder(fileEntry);
-//                    } else {
-                        System.err.println(fileEntry.getAbsolutePath());
-//                    }
+                try (Stream<Path> paths = Files.walk(Paths.get(""))) {
+                    paths
+                            .filter(Files::isRegularFile)
+                            .forEach(System.out::println);
                 }
                 System.err.println("------------------------------------------");
 
