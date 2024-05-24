@@ -47,9 +47,9 @@ public class FileEngineUtil {
                         + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File("").getAbsolutePath() + "/" + ASSETS_LOCATION + ". Exiting...");
 
                 File folder = new File("");
-                System.out.println(folder.getAbsolutePath());
+                System.err.println(folder.getAbsolutePath());
                 listFilesForFolder(folder);
-                System.out.println("------------------------------------------");
+                System.err.println("------------------------------------------");
 
                 System.exit(-1);
             }
@@ -64,7 +64,7 @@ public class FileEngineUtil {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry);
             } else {
-                System.out.println(fileEntry.getAbsolutePath());
+                System.err.println(fileEntry.getAbsolutePath());
             }
         }
     }
