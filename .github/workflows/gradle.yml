@@ -28,14 +28,15 @@ jobs:
         distribution: 'temurin'
 
 #    - uses: ./.github/workflows/scripts/copy_engines
-    - name: copy engines
-      working-directory: my-tools
-      shell: bash
-      run: |
-        mkdir assets
-        cd assets
-        mkdir engines
-        cp "${{ github.action_path }}/assets/engines/*" assets/engines
+#    - name: copy engines
+#      working-directory: my-tools
+#      shell: bash
+#      run: |
+#        mkdir assets
+#        cd assets
+#        mkdir engines
+#        cp "${{ github.action_path }}/assets/engines/*" assets/engines
 
     - name: Build with Gradle
+      working-directory: my-tools
       run: ./gradlew build --debug
