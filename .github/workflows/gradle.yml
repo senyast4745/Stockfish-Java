@@ -32,8 +32,10 @@ jobs:
       working-directory: my-tools
       shell: bash
       run: |
-        mkdir assets/engine
-        cp "${{ github.action_path }}/assets/engine/*" assets/engine
+        mkdir assets
+        cd assets
+        mkdir engines
+        cp "${{ github.action_path }}/assets/engines/*" assets/engines
 
     - name: Build with Gradle
       run: ./gradlew build --debug
