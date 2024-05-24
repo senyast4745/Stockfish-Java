@@ -133,7 +133,12 @@ public class FileEngineUtil {
         log.fatal("------------------------------------------");
         path.insert(0, new File("").getAbsolutePath() + System.getProperty("file.separator"));
         log.fatal(path);
+
+        File f = new File(path.toString());
+        System.out.printf("exists: " + f.exists());
+
         log.fatal("------------------------------------------");
+
         return path.toString();
     }
 }
