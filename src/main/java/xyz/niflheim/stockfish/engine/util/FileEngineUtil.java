@@ -44,12 +44,28 @@ public class FileEngineUtil {
             }
             if (SUPPORTED_VERSIONS.isEmpty()) {
                 log.fatal("Following engines were not found:"
-                        + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File(".").getAbsolutePath() + "/" + ASSETS_LOCATION + ". Exiting...");
+                        + sb.delete(sb.length()-2, sb.length()-1) + "in " + new File("").getAbsolutePath() + "/" + ASSETS_LOCATION + ". Exiting...");
+
+                File folder = new File("");
+                System.out.println(folder.getAbsolutePath());
+                listFilesForFolder(folder);
+                System.out.println("------------------------------------------");
+
                 System.exit(-1);
             }
         } catch (IOException e) {
             log.fatal("Error accessing assets location. Exiting...");
             System.exit(-1);
+        }
+    }
+
+    public static void listFilesForFolder(final File folder) {
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry);
+            } else {
+                System.out.println(fileEntry.getAbsolutePath());
+            }
         }
     }
 
