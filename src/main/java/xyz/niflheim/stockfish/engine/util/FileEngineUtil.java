@@ -131,6 +131,7 @@ public class FileEngineUtil {
                     throw new StockfishEngineException("Illegal variant provided.");
             }
         log.fatal("------------------------------------------");
+        path.insert(0, new File("").getAbsolutePath() + System.getProperty("file.separator"))
         log.fatal(path);
         log.fatal("------------------------------------------");
         return path.toString();
