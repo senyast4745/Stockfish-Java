@@ -43,7 +43,7 @@ class StockfishClientTest {
                 StockfishClient client = new StockfishClient.Builder()
                         .setInstances(instanceNumber)
                         .setOption(Option.Threads, 4)
-                        .setVariant(Variant.BMI2)
+//                        .setVariant(Variant.BMI2)
                         .build();
                 try {
                     Thread.sleep(100);
