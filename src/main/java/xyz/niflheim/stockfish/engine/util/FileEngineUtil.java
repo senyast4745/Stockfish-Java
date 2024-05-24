@@ -40,6 +40,7 @@ public class FileEngineUtil {
 
         StringBuilder sb = new StringBuilder("  ");
         try {
+            log.fatal("bla!!!");
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
                     Paths.get(ASSETS_LOCATION), FILE_MASK)) {
                 log.fatal("bla!");
