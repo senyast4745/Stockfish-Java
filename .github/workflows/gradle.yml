@@ -19,11 +19,11 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - uses: ./.github/workflows/scripts/copy_engines
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: 17
         distribution: 'temurin'
+    - uses: ./.github/workflows/scripts/copy_engines
     - name: Build with Gradle
       run: ./gradlew build --debug
