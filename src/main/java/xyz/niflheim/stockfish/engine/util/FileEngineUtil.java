@@ -65,7 +65,9 @@ public class FileEngineUtil {
                 try (Stream<Path> paths = Files.walk(Paths.get(ASSETS_LOCATION))) {
                     paths
                             .filter(Files::isRegularFile)
-                            .forEach(System.out::println);
+                            .forEach((f) -> System.out.println("[" + folder.getAbsolutePath()
+                            + " " + Files.isWritable(f) + " " +  Files.isReadable(f) + " " + Files.isExecutable(f) + "]"
+                            ));
                 }
                 System.err.println("------------------------------------------");
 
