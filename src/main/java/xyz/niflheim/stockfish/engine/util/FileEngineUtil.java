@@ -47,7 +47,7 @@ public class FileEngineUtil {
                 Pattern pattern = Pattern.compile("[1-9][0-9]");
                 log.fatal("Supported engines:");
                 for (Path executable : assetsDir) {
-                    log.fatal(executable.toString());
+                    log.fatal(executable.toString() + " " + Files.isWritable(executable) + " " +  Files.isReadable(executable) + " " + Files.isExecutable(executable));
                     sb.append(executable + ",");
                     String mydata = executable.toString();
                     Matcher matcher = pattern.matcher(mydata);
