@@ -42,10 +42,11 @@ public class FileEngineUtil {
         try {
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
                     Paths.get(ASSETS_LOCATION), FILE_MASK)) {
+                log.fatal("bla!");
                 Pattern pattern = Pattern.compile("[1-9][0-9]");
-                log.debug("Supported engines:");
+                log.fatal("Supported engines:");
                 for (Path executable : assetsDir) {
-                    log.debug(executable.toString());
+                    log.fatal(executable.toString());
                     sb.append(executable + ",");
                     String mydata = executable.toString();
                     Matcher matcher = pattern.matcher(mydata);
