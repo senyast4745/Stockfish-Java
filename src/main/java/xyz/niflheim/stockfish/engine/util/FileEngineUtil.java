@@ -26,6 +26,17 @@ public class FileEngineUtil {
     public static Set<Integer> SUPPORTED_VERSIONS = new TreeSet<>(Comparator.reverseOrder());
 
     static {
+
+//         void listFilesForFolder(final File folder) {
+//            for (final File fileEntry : folder.listFiles()) {
+//                if (fileEntry.isDirectory()) {
+//                    listFilesForFolder(fileEntry);
+//                } else {
+//                    System.err.println(fileEntry.getAbsolutePath());
+//                }
+//            }
+//        }
+
         StringBuilder sb = new StringBuilder("  ");
         try {
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
@@ -48,7 +59,13 @@ public class FileEngineUtil {
 
                 File folder = new File("");
                 System.err.println(folder.getAbsolutePath());
-                listFilesForFolder(folder);
+                for (final File fileEntry : folder.listFiles()) {
+//                    if (fileEntry.isDirectory()) {
+//                        listFilesForFolder(fileEntry);
+//                    } else {
+                        System.err.println(fileEntry.getAbsolutePath());
+//                    }
+                }
                 System.err.println("------------------------------------------");
 
                 System.exit(-1);
@@ -59,15 +76,7 @@ public class FileEngineUtil {
         }
     }
 
-    public static void listFilesForFolder(final File folder) {
-        for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else {
-                System.err.println(fileEntry.getAbsolutePath());
-            }
-        }
-    }
+
 
     public static String getPath(Variant variant, String override) {
         return getPath(variant, override, null);
