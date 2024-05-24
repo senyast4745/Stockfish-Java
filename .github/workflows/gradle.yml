@@ -19,11 +19,21 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        path: my-tools
+
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: 17
         distribution: 'temurin'
-    - uses: ./.github/workflows/scripts/copy_engines
+
+#    - uses: ./.github/workflows/scripts/copy_engines
+    - name: copy engines
+      working-directory: my-tools
+      shell: bash
+      run: |
+        mkdir assets/engine
+        cp "${{ github.action_path }}/assets/engine/*" assets/engine
+
     - name: Build with Gradle
       run: ./gradlew build --debug
