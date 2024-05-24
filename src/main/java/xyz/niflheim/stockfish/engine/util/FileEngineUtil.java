@@ -128,7 +128,9 @@ public class FileEngineUtil {
                 default:
                     throw new StockfishEngineException("Illegal variant provided.");
             }
-
+        log.fatal("------------------------------------------");
+        log.fatal(path);
+        log.fatal("------------------------------------------");
         return path.toString();
     }
 }
