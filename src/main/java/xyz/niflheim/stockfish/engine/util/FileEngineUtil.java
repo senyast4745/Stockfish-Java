@@ -21,7 +21,7 @@ public class FileEngineUtil {
 
     public static final String ASSETS_LOCATION = "assets/engines/";
     public static final String ENGINE_FILE_NAME_PREFIX = "stockfish_";
-    public static final String ENGINE_FILE_NAME_SUFFIX = "_X64";
+    public static final String ENGINE_FILE_NAME_SUFFIX = "_x64";
     public static final String FILE_MASK = ENGINE_FILE_NAME_PREFIX + "??" + ENGINE_FILE_NAME_SUFFIX + "*";
 
     public static Set<Integer> SUPPORTED_VERSIONS = new TreeSet<>(Comparator.reverseOrder());
@@ -138,12 +138,23 @@ public class FileEngineUtil {
 
         Path f = Paths.get(path.toString());
         System.out.println("exists 1: " + Files.exists(f));
-        Optional<Path> op = SUPPORTED_VERSIONS_PATHS.stream().filter(p -> p.toAbsolutePath().toString().contains(path.toString())).findFirst();
-        if(!op.isPresent()) {
-            System.out.println("path not present");
-        } else {
-            System.out.println("exists 2: " + Files.exists(op.get()));
+//        Optional<Path> op = SUPPORTED_VERSIONS_PATHS.stream().filter(p -> p.toAbsolutePath().toString().contains(path.toString())).findFirst();
+//        if(!op.isPresent()) {
+//            System.out.println("path not present");
+//        } else {
+//            System.out.println("exists 2: " + Files.exists(op.get()));
+//        }
+
+        for (Iterator<Path> iterator = SUPPORTED_VERSIONS_PATHS.iterator(); iterator.hasNext(); ) {
+            Path p =  iterator.next();
+            System.out.println(p.toAbsolutePath().toString() + "   ?????===   " + path.toString());
+            if (p.toAbsolutePath().toString().equals(path.toString())) {
+                System.out.println("exists 2: " + path);
+                break;
+            }
+
         }
+
 
         SUPPORTED_VERSIONS_PATHS.forEach(p -> System.out.println(p.toAbsolutePath() + " " + Files.exists(p)));
 
