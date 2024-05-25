@@ -19,7 +19,7 @@ public class FileEngineUtil {
 
     public static final String ASSETS_LOCATION = "assets/engines/";
     public static final String ENGINE_FILE_NAME_PREFIX = "stockfish_";
-    public static final String ENGINE_FILE_NAME_SUFFIX = "_X64";
+    public static final String ENGINE_FILE_NAME_SUFFIX = "_x64";
     public static final String FILE_MASK = ENGINE_FILE_NAME_PREFIX + "??" + ENGINE_FILE_NAME_SUFFIX + "*";
 
     public static Set<Integer> SUPPORTED_VERSIONS = new TreeSet<>(Comparator.reverseOrder());
@@ -27,7 +27,7 @@ public class FileEngineUtil {
     static {
         try {
             try (DirectoryStream<Path> assetsDir = Files.newDirectoryStream(
-                    Paths.get(ASSETS_LOCATION), FILE_MASK)) {
+                    Paths.get(ASSETS_LOCATION))) {
                 Pattern pattern = Pattern.compile("[1-9][0-9]");
                 log.debug("Supported engines:");
                 for (Path executable : assetsDir) {
