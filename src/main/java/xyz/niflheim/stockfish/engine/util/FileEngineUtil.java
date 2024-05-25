@@ -25,6 +25,7 @@ public class FileEngineUtil {
     public static final String FILE_MASK = ENGINE_FILE_NAME_PREFIX + "??" + ENGINE_FILE_NAME_SUFFIX + "*";
 
     public static Set<Integer> SUPPORTED_VERSIONS = new TreeSet<>(Comparator.reverseOrder());
+    public static Set<Path> SUPPORTED_VERSIONS_PATHS = new TreeSet<>(Comparator.reverseOrder());
 
     static {
 
@@ -47,8 +48,9 @@ public class FileEngineUtil {
                 Pattern pattern = Pattern.compile("[1-9][0-9]");
                 log.fatal("Supported engines:");
                 for (Path executable : assetsDir) {
-                    log.fatal(executable.toAbsolutePath() + "" + Files.exists(executable) + " " + Files.isWritable(executable) + " " +  Files.isReadable(executable) + " " + Files.isExecutable(executable));
+                    log.fatal(executable.toAbsolutePath() + " " + Files.exists(executable) + " " + Files.isWritable(executable) + " " +  Files.isReadable(executable) + " " + Files.isExecutable(executable));
                     sb.append(executable + ",");
+                    SUPPORTED_VERSIONS_PATHS.add(executable);
                     String mydata = executable.toString();
                     Matcher matcher = pattern.matcher(mydata);
                     if (matcher.find()) {
@@ -135,7 +137,13 @@ public class FileEngineUtil {
         log.fatal(path);
 
         File f = new File(path.toString());
-        System.out.printf("exists: " + f.exists());
+        System.out.printf("exists 1: " + f.exists());
+        Optional<Path> op = SUPPORTED_VERSIONS_PATHS.stream().filter(p -> p.toAbsolutePath().toString().equals(path.toString())).findFirst();
+        if(!op.isPresent()) {
+            System.out.printf("path not present");
+        } else {
+            System.out.printf("exists 2: " + Files.exists(op.get()));
+        }
 
         log.fatal("------------------------------------------");
 

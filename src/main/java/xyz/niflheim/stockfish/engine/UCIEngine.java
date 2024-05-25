@@ -43,6 +43,7 @@ abstract class UCIEngine {
             for (Option option : options)
                 passOption(option);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new StockfishInitException("Unable to start and bind Stockfish process: ", e);
         }
     }
