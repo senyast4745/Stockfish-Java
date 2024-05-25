@@ -137,12 +137,12 @@ public class FileEngineUtil {
         log.fatal(path);
 
         File f = new File(path.toString());
-        System.out.printf("exists 1: " + f.exists());
+        System.out.println("exists 1: " + f.exists());
         Optional<Path> op = SUPPORTED_VERSIONS_PATHS.stream().filter(p -> p.toAbsolutePath().toString().equals(path.toString())).findFirst();
         if(!op.isPresent()) {
-            System.out.printf("path not present");
+            System.out.println("path not present");
         } else {
-            System.out.printf("exists 2: " + Files.exists(op.get()));
+            System.out.println("exists 2: " + Files.exists(op.get()));
         }
 
         log.fatal("------------------------------------------");
